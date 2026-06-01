@@ -41,5 +41,6 @@ export interface Settings {
   widgetEnabled: boolean;
   widgetTitle: string;
   widgetText: string;
+  appsScriptUrl?: string;
 }
 

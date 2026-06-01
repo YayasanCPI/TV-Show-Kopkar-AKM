@@ -19,20 +19,43 @@ function DigitalSignage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch Slides
-        const slidesRes = await fetch('/api/slides');
-        if (!slidesRes.ok) throw new Error('Failed to fetch slides');
-        const slidesData = await slidesRes.json();
-        setSlides(slidesData);
-        localStorage.setItem('slidedata-fallback', JSON.stringify(slidesData));
-        
-        // Fetch Settings
-        const settingsRes = await fetch('/api/settings');
-        if (settingsRes.ok) {
-          const settingsData = await settingsRes.json();
-          if (settingsData && Object.keys(settingsData).length > 0) {
-            setSettings(settingsData);
-            localStorage.setItem('settings-fallback', JSON.stringify(settingsData));
+        const localSettings = localStorage.getItem('settings-fallback');
+        let currentSettings = localSettings ? JSON.parse(localSettings) : null;
+        let appsScriptUrl = currentSettings?.appsScriptUrl;
+
+        if (appsScriptUrl) {
+          const resSettings = await fetch(`${appsScriptUrl}?action=getSettings`);
+          if (resSettings.ok) {
+             const remoteSettings = await resSettings.json();
+             if (remoteSettings && Object.keys(remoteSettings).length > 0) {
+                setSettings(remoteSettings);
+                localStorage.setItem('settings-fallback', JSON.stringify(remoteSettings));
+             }
+          }
+          const resSlides = await fetch(`${appsScriptUrl}?action=getSlides`);
+          if (resSlides.ok) {
+             const remoteSlides = await resSlides.json();
+             if (remoteSlides && remoteSlides.length > 0) {
+                setSlides(remoteSlides);
+                localStorage.setItem('slidedata-fallback', JSON.stringify(remoteSlides));
+             }
+          }
+        } else {
+          // Fetch Slides from local API
+          const slidesRes = await fetch('/api/slides');
+          if (!slidesRes.ok) throw new Error('Failed to fetch slides');
+          const slidesData = await slidesRes.json();
+          setSlides(slidesData);
+          localStorage.setItem('slidedata-fallback', JSON.stringify(slidesData));
+          
+          // Fetch Settings from local API
+          const settingsRes = await fetch('/api/settings');
+          if (settingsRes.ok) {
+            const settingsData = await settingsRes.json();
+            if (settingsData && Object.keys(settingsData).length > 0) {
+              setSettings(settingsData);
+              localStorage.setItem('settings-fallback', JSON.stringify(settingsData));
+            }
           }
         }
       } catch (err: any) {

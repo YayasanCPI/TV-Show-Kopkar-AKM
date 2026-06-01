@@ -16,19 +16,42 @@ export default function AdminPanel() {
 
   const fetchData = async () => {
     try {
-      // Fetch slides
-      const resSlides = await fetch('/api/slides');
-      if (resSlides.ok) {
-        setSlides(await resSlides.json());
-      } else {
-        throw new Error('Slides API failed');
-      }
+      const localSettings = localStorage.getItem('settings-fallback');
+      let currentSettings = localSettings ? JSON.parse(localSettings) : null;
+      let appsScriptUrl = currentSettings?.appsScriptUrl;
 
-      // Fetch settings
-      const resSettings = await fetch('/api/settings');
-      if (resSettings.ok) {
-        const data = await resSettings.json();
-        if (data && Object.keys(data).length > 0) setSettings(data);
+      if (appsScriptUrl) {
+        // Fetch from Google Apps Script
+        const resSettings = await fetch(`${appsScriptUrl}?action=getSettings`);
+        if (resSettings.ok) {
+           const remoteSettings = await resSettings.json();
+           if (remoteSettings && Object.keys(remoteSettings).length > 0) {
+              setSettings(remoteSettings);
+              localStorage.setItem('settings-fallback', JSON.stringify(remoteSettings));
+           }
+        }
+        const resSlides = await fetch(`${appsScriptUrl}?action=getSlides`);
+        if (resSlides.ok) {
+           const remoteSlides = await resSlides.json();
+           if (remoteSlides && remoteSlides.length > 0) {
+              setSlides(remoteSlides);
+              localStorage.setItem('slidedata-fallback', JSON.stringify(remoteSlides));
+           }
+        }
+      } else {
+        // Fetch from Local API
+        const resSlides = await fetch('/api/slides');
+        if (resSlides.ok) {
+          setSlides(await resSlides.json());
+        } else {
+          throw new Error('Slides API failed');
+        }
+
+        const resSettings = await fetch('/api/settings');
+        if (resSettings.ok) {
+          const data = await resSettings.json();
+          if (data && Object.keys(data).length > 0) setSettings(data);
+        }
       }
     } catch (err) {
       console.log('API failed, falling back to local storage', err);
@@ -54,28 +77,44 @@ export default function AdminPanel() {
     localStorage.setItem('settings-fallback', JSON.stringify(settings));
     
     try {
-      const p1 = fetch('/api/slides', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(slides)
-      });
-      const p2 = fetch('/api/settings', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(settings)
-      });
-
-      const [res1, res2] = await Promise.all([p1, p2]);
-      
-      if (res1.ok && res2.ok) {
-        setMessage('Perubahan berhasil disimpan! Tersimpan di Server.');
-        setTimeout(() => setMessage(''), 3000);
+      if (settings.appsScriptUrl) {
+         const p1 = fetch(`${settings.appsScriptUrl}?action=saveSlides`, {
+           method: 'POST',
+           body: JSON.stringify(slides),
+           mode: 'no-cors'
+         });
+         const p2 = fetch(`${settings.appsScriptUrl}?action=saveSettings`, {
+           method: 'POST',
+           body: JSON.stringify(settings),
+           mode: 'no-cors'
+         });
+         await Promise.all([p1, p2]);
+         setMessage('Perubahan berhasil disimpan! Tersimpan di Google Drive.');
+         setTimeout(() => setMessage(''), 3000);
       } else {
-        setMessage('Gagal menyimpan ke server. Tersimpan di memori browser (Local Storage).');
+        const p1 = fetch('/api/slides', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(slides)
+        });
+        const p2 = fetch('/api/settings', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(settings)
+        });
+
+        const [res1, res2] = await Promise.all([p1, p2]);
+        
+        if (res1.ok && res2.ok) {
+          setMessage('Perubahan berhasil disimpan! Tersimpan di Server Lokal.');
+          setTimeout(() => setMessage(''), 3000);
+        } else {
+          setMessage('Gagal menyimpan ke server lokal. Tersimpan di memori browser (Local Storage).');
+        }
       }
     } catch (err) {
       console.error(err);
-      setMessage('Mode Offline aktif: Perubahan berhasil disimpan di memori browser Anda.');
+      setMessage('Layanan Offline: Perubahan berhasil disimpan di memori browser Anda.');
       setTimeout(() => setMessage(''), 3000);
     } finally {
       setSaving(false);
@@ -229,6 +268,19 @@ export default function AdminPanel() {
                   ))}
                 </div>
               </div>
+            </div>
+
+            {/* Google Drive Backend Link */}
+            <div className="mt-8 bg-slate-50 p-6 rounded-xl border border-slate-200">
+              <h3 className="font-bold text-lg text-slate-800 mb-2">Google Drive Backend (Opsional)</h3>
+              <p className="text-sm text-slate-500 mb-4">Jika Anda sudah mendeploy Google Apps Script, masukkan URL Web App di bawah ini. Aplikasi akan beralih menggunakan Google Drive sebagai database.</p>
+              <input
+                type="text"
+                placeholder="https://script.google.com/macros/s/.../exec"
+                value={settings.appsScriptUrl || ''}
+                onChange={(e) => updateSettings('appsScriptUrl', e.target.value)}
+                className="w-full border border-slate-300 px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+              />
             </div>
           </div>
         </div>

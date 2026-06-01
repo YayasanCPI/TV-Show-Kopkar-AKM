@@ -11,7 +11,8 @@ export const defaultSettings: Settings = {
   ],
   widgetEnabled: true,
   widgetTitle: "INFO PENTING",
-  widgetText: "Jam Layanan: Senin - Jumat (08:00 - 16:00) | Update Saldo setiap akhir bulan."
+  widgetText: "Jam Layanan: Senin - Jumat (08:00 - 16:00) | Update Saldo setiap akhir bulan.",
+  appsScriptUrl: ""
 };
 
 export const defaultSlides: Slide[] = [
