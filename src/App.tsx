@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { HashRouter, Routes, Route } from 'react-router-dom';
 import SlideCarousel from './components/SlideCarousel';
 import { Slide } from './types';
 import { Loader2 } from 'lucide-react';
@@ -78,11 +78,11 @@ function DigitalSignage() {
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Routes>
         <Route path="/" element={<DigitalSignage />} />
         <Route path="/admin" element={<AdminPanel />} />
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
