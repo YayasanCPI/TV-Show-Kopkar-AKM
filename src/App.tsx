@@ -22,8 +22,8 @@ function DigitalSignage() {
     const fetchData = async () => {
       try {
         const localSettings = localStorage.getItem('settings-fallback');
-        let currentSettings = localSettings ? JSON.parse(localSettings) : null;
-        let appsScriptUrl = currentSettings?.appsScriptUrl;
+        let currentSettings = localSettings ? JSON.parse(localSettings) : defaultSettings;
+        let appsScriptUrl = currentSettings?.appsScriptUrl || defaultSettings.appsScriptUrl;
 
         if (appsScriptUrl) {
           const resSettings = await fetch(`${appsScriptUrl}?action=getSettings`);

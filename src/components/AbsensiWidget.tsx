@@ -86,7 +86,18 @@ export default function AbsensiWidget() {
     return () => clearInterval(interval);
   }, []);
 
-  if (hadirList.length === 0) return null;
+  if (hadirList.length === 0) {
+    return (
+      <div className="flex items-center gap-4 border-l border-white/10 pl-6 ml-6 h-8 opacity-50">
+         <div className="flex items-center gap-2">
+             <Users size={16} className="text-slate-400" />
+             <span className="font-bold text-sm text-slate-400 uppercase tracking-widest flex items-center gap-1.5">
+                Belum Ada Kehadiran
+             </span>
+         </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex items-center gap-4 border-l border-white/10 pl-6 ml-6 h-8">
