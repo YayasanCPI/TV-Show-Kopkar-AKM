@@ -1,6 +1,6 @@
 {
-  "name": "",
-  "description": "",
+  "name": "Koperasi Jasa Adaro Karya Mandiri - Digital Signage",
+  "description": "Aplikasi web modern untuk layanan Koperasi, Digital Signage, dan manajemen slide informatif Koperasi Adaro Karya Mandiri.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }
