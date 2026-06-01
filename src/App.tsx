@@ -88,6 +88,29 @@ function DigitalSignage() {
     return () => clearInterval(interval);
   }, []);
 
+  // Responsive Signage Scaler
+  useEffect(() => {
+    const handleResize = () => {
+      // Desain dasar menggunakan resolusi 1920x1080 (Landscape TV 16:9)
+      const scaleX = window.innerWidth / 1920;
+      const scaleY = window.innerHeight / 1080;
+      // Ambil nilai terkecil agar tidak ada yang terpotong (fit to screen)
+      const scale = Math.min(scaleX, scaleY);
+      
+      // Batasi scale minimal agar tidak terlalu kecil di layar HP (misal min 0.4)
+      const finalScale = Math.max(0.4, scale);
+      
+      document.documentElement.style.fontSize = `${16 * finalScale}px`;
+    };
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      document.documentElement.style.fontSize = ''; // Reset on unmount
+    };
+  }, []);
+
   if (loading) {
     return (
       <div className="w-full h-screen flex flex-col items-center justify-center bg-black">
