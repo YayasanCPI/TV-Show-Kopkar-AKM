@@ -32,8 +32,8 @@ export default function Header() {
       <div className="flex items-center gap-8">
         <div className="relative">
           <div className="absolute inset-0 bg-blue-500 blur-lg opacity-40 rounded-full"></div>
-          <div className="w-24 h-24 bg-slate-950 border border-blue-500/30 rounded-full flex items-center justify-center relative z-10 shadow-xl">
-            <Landmark size={48} className="text-cyan-400" />
+          <div className="w-24 h-24 bg-white border border-blue-500/30 rounded-full flex items-center justify-center relative z-10 shadow-xl overflow-hidden">
+            <img src="https://i.ibb.co.com/WvTwLMn5/image-1.png" alt="Logo KOPKAR AKM" className="w-full h-full object-contain p-2" />
           </div>
         </div>
         <div className="flex flex-col justify-center">

@@ -166,6 +166,22 @@ export default function AdminPanel() {
     updateSettings('marqueeText', newMarquee);
   };
 
+  const addSlide = () => {
+    const newId = slides.length > 0 ? Math.max(...slides.map(s => s.id)) + 1 : 1;
+    const newSlide: Slide = {
+      id: newId,
+      type: "flyer",
+      title: "Slide Baru",
+      subtitle: "Deskripsi Singkat",
+      duration: 10000
+    };
+    setSlides([...slides, newSlide]);
+  };
+
+  const removeSlide = (id: number) => {
+    setSlides(slides.filter(s => s.id !== id));
+  };
+
   if (loading) {
     return (
       <div className="w-full min-h-screen flex items-center justify-center bg-slate-100">
@@ -288,18 +304,26 @@ export default function AdminPanel() {
         {/* Content Settings */}
         <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
           <div className="p-8">
-            <h2 className="text-2xl font-bold mb-6 flex items-center gap-3">
-              <ImageIcon className="text-slate-400" />
-              Kelola Konten Slide
-            </h2>
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-bold flex items-center gap-3">
+                <ImageIcon className="text-slate-400" />
+                Kelola Konten Slide
+              </h2>
+              <button onClick={addSlide} className="text-sm font-medium text-blue-600 hover:text-blue-800 bg-blue-100 px-4 py-2 rounded-lg">
+                + Tambah Slide
+              </button>
+            </div>
             
             <div className="flex flex-col gap-6">
               {slides.map(slide => (
                 <div key={slide.id} className="bg-slate-50 rounded-xl p-6 border border-slate-200">
-                  <div className="flex items-center gap-3 mb-6">
+                  <div className="flex items-center justify-between mb-6">
                     <span className="bg-slate-300 text-blue-800 font-bold px-3 py-1 rounded-full text-xs uppercase tracking-wider">
                       Slide {slide.id} - {slide.type}
                     </span>
+                    <button onClick={() => removeSlide(slide.id)} className="text-sm font-medium text-red-600 hover:text-red-800 bg-red-100 px-3 py-1 rounded-lg">
+                      Hapus
+                    </button>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
