@@ -6,6 +6,7 @@ import { Loader2 } from 'lucide-react';
 import Header from './components/Header';
 import Marquee from './components/Marquee';
 import AdminPanel from './components/AdminPanel';
+import SmartNotification from './components/SmartNotification';
 import { defaultSlides, defaultSettings } from './defaultData';
 import { ErrorBoundary } from './ErrorBoundary';
 
@@ -125,6 +126,7 @@ function DigitalSignage() {
         </div>
       )}
       <div className="flex-1 relative w-full h-full overflow-hidden z-10">
+        <SmartNotification />
         <SlideCarousel slides={slides} />
       </div>
       <Marquee settings={settings} />

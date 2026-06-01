@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Slide, Settings } from '../types';
-import { Loader2, Save, Image as ImageIcon, Settings as SettingsIcon, CheckCircle, Video as VideoIcon } from 'lucide-react';
+import { Loader2, Save, Image as ImageIcon, Settings as SettingsIcon, CheckCircle, Video as VideoIcon, Bell } from 'lucide-react';
 import { defaultSlides, defaultSettings } from '../defaultData';
 
 export default function AdminPanel() {
@@ -182,6 +182,14 @@ export default function AdminPanel() {
     setSlides(slides.filter(s => s.id !== id));
   };
 
+  const simulateNotification = (type: string) => {
+    localStorage.setItem('test-notification', type);
+    setTimeout(() => {
+      localStorage.removeItem('test-notification');
+    }, 15000); // clear after 15 seconds
+    alert(`Simulasi Alarm ${type.toUpperCase()} diaktifkan. Silakan lihat layar Signage utama dalam tab/perangkat lain, Simulasi aktif selama 15 detik.`);
+  };
+
   if (loading) {
     return (
       <div className="w-full min-h-screen flex items-center justify-center bg-slate-100">
@@ -297,6 +305,28 @@ export default function AdminPanel() {
                 onChange={(e) => updateSettings('appsScriptUrl', e.target.value)}
                 className="w-full border border-slate-300 px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
               />
+            </div>
+          </div>
+        </div>
+
+        {/* Smart Notifications Simulation */}
+        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden mb-8">
+          <div className="p-8">
+            <h2 className="text-2xl font-bold mb-6 flex items-center gap-3">
+              <Bell className="text-slate-400" />
+              Simulasi Alarm & Notifikasi Pintar
+            </h2>
+            <p className="text-sm text-slate-500 mb-6">Alarm ini akan berjalan otomatis sesuai jam yang ditetapkan sehari-hari (08:00, 12:00, 16:45). Gunakan tombol di bawah ini untuk melihat tampilan pratinjaunya. Pastikan Signage terbuka dan telah mendapatkan izin untuk memainkan suara kliping audio (anda mungkin harus mengklik 1 kali ke dalam papan signage untuk mengizinkan audionya diputar).</p>
+            <div className="flex gap-4">
+               <button onClick={() => simulateNotification('morning')} className="bg-blue-100 text-blue-700 hover:bg-blue-200 px-6 py-3 rounded-lg font-bold">
+                 Test Masuk Kerja (08:00)
+               </button>
+               <button onClick={() => simulateNotification('lunch')} className="bg-amber-100 text-amber-700 hover:bg-amber-200 px-6 py-3 rounded-lg font-bold">
+                 Test Istirahat (12:00)
+               </button>
+               <button onClick={() => simulateNotification('evening')} className="bg-red-100 text-red-700 hover:bg-red-200 px-6 py-3 rounded-lg font-bold">
+                 Test Pulang & Laporan (16:45)
+               </button>
             </div>
           </div>
         </div>
