@@ -5,6 +5,7 @@ import fs from "fs";
 
 // Slide Data File Path
 const DATA_FILE = path.join(process.cwd(), 'slideData.json');
+const SETTINGS_FILE = path.join(process.cwd(), 'settings.json');
 
 // Read slides from file
 function getSlideData() {
@@ -30,6 +31,30 @@ function saveSlideData(data: any) {
   }
 }
 
+// Read settings from file
+function getSettingsData() {
+  try {
+    if (fs.existsSync(SETTINGS_FILE)) {
+      const content = fs.readFileSync(SETTINGS_FILE, 'utf-8');
+      return JSON.parse(content);
+    }
+  } catch (error) {
+    console.error('Error reading settings.json', error);
+  }
+  return null;
+}
+
+// Write settings to file
+function saveSettingsData(data: any) {
+  try {
+    fs.writeFileSync(SETTINGS_FILE, JSON.stringify(data, null, 2), 'utf-8');
+    return true;
+  } catch (error) {
+    console.error('Error writing settings.json', error);
+    return false;
+  }
+}
+
 async function startServer() {
   const app = express();
   const PORT = 3000;
@@ -48,6 +73,25 @@ async function startServer() {
         res.json({ success: true, message: "Slides updated successfully" });
       } else {
         res.status(500).json({ success: false, message: "Failed to save slides" });
+      }
+    } else {
+      res.status(400).json({ success: false, message: "Invalid payload format" });
+    }
+  });
+
+  // API route to get settings
+  app.get("/api/settings", (req, res) => {
+    const settings = getSettingsData();
+    res.json(settings || {});
+  });
+
+  // API route to update settings
+  app.post("/api/settings", (req, res) => {
+    if (req.body) {
+      if (saveSettingsData(req.body)) {
+        res.json({ success: true, message: "Settings updated successfully" });
+      } else {
+        res.status(500).json({ success: false, message: "Failed to save settings" });
       }
     } else {
       res.status(400).json({ success: false, message: "Invalid payload format" });

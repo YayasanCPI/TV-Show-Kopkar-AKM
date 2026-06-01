@@ -1,36 +1,45 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Slide } from '../types';
-import { Loader2, Save, Image as ImageIcon, CheckCircle } from 'lucide-react';
-import { defaultSlides } from '../defaultData';
+import { Slide, Settings } from '../types';
+import { Loader2, Save, Image as ImageIcon, Settings as SettingsIcon, CheckCircle, Video as VideoIcon } from 'lucide-react';
+import { defaultSlides, defaultSettings } from '../defaultData';
 
 export default function AdminPanel() {
   const [slides, setSlides] = useState<Slide[]>([]);
+  const [settings, setSettings] = useState<Settings>(defaultSettings);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    fetchSlides();
+    fetchData();
   }, []);
 
-  const fetchSlides = async () => {
+  const fetchData = async () => {
     try {
-      const response = await fetch('/api/slides');
-      if (response.ok) {
-        const data = await response.json();
-        setSlides(data);
+      // Fetch slides
+      const resSlides = await fetch('/api/slides');
+      if (resSlides.ok) {
+        setSlides(await resSlides.json());
       } else {
-        throw new Error('API failed');
+        throw new Error('Slides API failed');
+      }
+
+      // Fetch settings
+      const resSettings = await fetch('/api/settings');
+      if (resSettings.ok) {
+        const data = await resSettings.json();
+        if (data && Object.keys(data).length > 0) setSettings(data);
       }
     } catch (err) {
       console.log('API failed, falling back to local storage', err);
-      const localData = localStorage.getItem('slidedata-fallback');
-      if (localData) {
-        setSlides(JSON.parse(localData));
-      } else {
-        setSlides(defaultSlides);
-      }
+      
+      const localSlides = localStorage.getItem('slidedata-fallback');
+      if (localSlides) setSlides(JSON.parse(localSlides));
+      else setSlides(defaultSlides);
+
+      const localSettings = localStorage.getItem('settings-fallback');
+      if (localSettings) setSettings(JSON.parse(localSettings));
+      else setSettings(defaultSettings);
     } finally {
       setLoading(false);
     }
@@ -42,14 +51,23 @@ export default function AdminPanel() {
     
     // Always save to localStorage as a fallback
     localStorage.setItem('slidedata-fallback', JSON.stringify(slides));
+    localStorage.setItem('settings-fallback', JSON.stringify(settings));
     
     try {
-      const response = await fetch('/api/slides', {
+      const p1 = fetch('/api/slides', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(slides)
       });
-      if (response.ok) {
+      const p2 = fetch('/api/settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(settings)
+      });
+
+      const [res1, res2] = await Promise.all([p1, p2]);
+      
+      if (res1.ok && res2.ok) {
         setMessage('Perubahan berhasil disimpan! Tersimpan di Server.');
         setTimeout(() => setMessage(''), 3000);
       } else {
@@ -72,18 +90,41 @@ export default function AdminPanel() {
     reader.onload = (event) => {
       const base64String = event.target?.result as string;
       setSlides(slides.map(s => 
-        s.id === slideId ? { ...s, imageUrl: base64String } : s
+        s.id === slideId ? { ...s, imageUrl: base64String, videoUrl: '' } : s
       ));
     };
     reader.readAsDataURL(file);
   };
 
   const updateSlideImageUrl = (id: number, url: string) => {
-    setSlides(slides.map(s => s.id === id ? { ...s, imageUrl: url } : s));
+    setSlides(slides.map(s => s.id === id ? { ...s, imageUrl: url, videoUrl: '' } : s));
+  };
+
+  const updateSlideVideoUrl = (id: number, url: string) => {
+    setSlides(slides.map(s => s.id === id ? { ...s, videoUrl: url, imageUrl: '' } : s));
   };
 
   const updateSlideText = (id: number, field: keyof Slide, value: string) => {
     setSlides(slides.map(s => s.id === id ? { ...s, [field]: value } : s));
+  };
+
+  const updateSettings = (field: keyof Settings, value: any) => {
+    setSettings(prev => ({ ...prev, [field]: value }));
+  };
+
+  const updateMarqueeText = (index: number, value: string) => {
+    const newMarquee = [...settings.marqueeText];
+    newMarquee[index] = value;
+    updateSettings('marqueeText', newMarquee);
+  };
+
+  const addMarqueeText = () => {
+    updateSettings('marqueeText', [...settings.marqueeText, 'TEKS BARU']);
+  };
+
+  const removeMarqueeText = (index: number) => {
+    const newMarquee = settings.marqueeText.filter((_, i) => i !== index);
+    updateSettings('marqueeText', newMarquee);
   };
 
   if (loading) {
@@ -119,6 +160,80 @@ export default function AdminPanel() {
           </div>
         </div>
 
+        {/* Global Settings Section */}
+        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden mb-8">
+          <div className="p-8">
+            <h2 className="text-2xl font-bold mb-6 flex items-center gap-3">
+              <SettingsIcon className="text-slate-400" />
+              Pengaturan Umum (Widget & Running Text)
+            </h2>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {/* Widget Block */}
+              <div className="bg-slate-50 p-6 rounded-xl border border-slate-200">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="font-bold text-lg text-slate-800">Widget Informasi</h3>
+                  <label className="flex items-center cursor-pointer">
+                    <div className="relative">
+                      <input type="checkbox" className="sr-only" checked={settings.widgetEnabled} onChange={(e) => updateSettings('widgetEnabled', e.target.checked)} />
+                      <div className={`block w-14 h-8 rounded-full transition-colors ${settings.widgetEnabled ? 'bg-blue-500' : 'bg-slate-300'}`}></div>
+                      <div className={`dot absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition-transform ${settings.widgetEnabled ? 'transform translate-x-6' : ''}`}></div>
+                    </div>
+                  </label>
+                </div>
+                
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">Judul Widget</label>
+                    <input
+                      type="text"
+                      value={settings.widgetTitle}
+                      onChange={(e) => updateSettings('widgetTitle', e.target.value)}
+                      disabled={!settings.widgetEnabled}
+                      className="w-full border border-slate-300 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-slate-200 disabled:text-slate-400"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">Teks Utama Widget</label>
+                    <textarea
+                      value={settings.widgetText}
+                      onChange={(e) => updateSettings('widgetText', e.target.value)}
+                      disabled={!settings.widgetEnabled}
+                      rows={2}
+                      className="w-full border border-slate-300 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-slate-200 disabled:text-slate-400"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Marquee Block */}
+              <div className="bg-slate-50 p-6 rounded-xl border border-slate-200">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="font-bold text-lg text-slate-800">Running Text (Marquee)</h3>
+                  <button onClick={addMarqueeText} className="text-sm font-medium text-blue-600 hover:text-blue-800 bg-blue-100 px-3 py-1 rounded-lg">
+                    + Tambah Teks
+                  </button>
+                </div>
+                
+                <div className="space-y-3 max-h-60 overflow-y-auto pr-2">
+                  {settings.marqueeText.map((text, i) => (
+                    <div key={i} className="flex gap-2">
+                      <input
+                        type="text"
+                        value={text}
+                        onChange={(e) => updateMarqueeText(i, e.target.value)}
+                        className="flex-1 border border-slate-300 px-3 py-2 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                      <button onClick={() => removeMarqueeText(i)} className="bg-red-100 text-red-600 px-3 py-2 rounded-lg hover:bg-red-200 text-sm font-medium">Hapus</button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Content Settings */}
         <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
           <div className="p-8">
             <h2 className="text-2xl font-bold mb-6 flex items-center gap-3">
@@ -182,11 +297,13 @@ export default function AdminPanel() {
                   {/* Specific fields based on slide type */}
                   {slide.type === 'flyer' && (
                     <div className="pt-6 border-t border-slate-200">
-                      <h4 className="font-bold text-slate-800 mb-4">Gambar Promosi / Flyer</h4>
+                      <h4 className="font-bold text-slate-800 mb-4">Gambar / Video Promosi (Flyer)</h4>
+                      <p className="text-sm text-slate-500 mb-4">Anda dapat menampilkan satu gambar poster atau memutar sebuah video.</p>
+                      
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div>
-                          <label className="block text-sm font-medium text-slate-700 mb-2">
-                            Upload Gambar Baru
+                          <label className="block text-sm font-medium text-slate-700 mb-2 flex items-center gap-2">
+                            <ImageIcon size={16}/> Upload Gambar Poster
                           </label>
                           <input
                             type="file"
@@ -195,9 +312,9 @@ export default function AdminPanel() {
                             className="block w-full text-sm text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-slate-300 transition-colors border border-slate-300 rounded-lg bg-white"
                           />
                           
-                          <div className="mt-6">
+                          <div className="mt-4">
                             <label className="block text-sm font-medium text-slate-700 mb-2">
-                              Atau Gunakan URL Gambar
+                              Atau Gunakan URL Gambar Secara Online
                             </label>
                             <input
                               type="text"
@@ -207,13 +324,33 @@ export default function AdminPanel() {
                               className="w-full border border-slate-300 px-4 py-2.5 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                             />
                           </div>
+
+                          <div className="mt-6 pt-6 border-t border-slate-200">
+                            <label className="block text-sm font-medium text-slate-700 mb-2 flex items-center gap-2 text-blue-700">
+                              <VideoIcon size={16}/> Gunakan Video URL (MP4)
+                            </label>
+                            <input
+                              type="text"
+                              value={slide.videoUrl || ''}
+                              onChange={(e) => updateSlideVideoUrl(slide.id, e.target.value)}
+                              placeholder="https://example.com/video.mp4"
+                              className="w-full border border-slate-300 px-4 py-2.5 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                            <p className="text-xs text-slate-500 mt-2">Jika Anda memasukkan Video URL, maka gambar di atas akan diabaikan.</p>
+                          </div>
                         </div>
 
-                        <div className="bg-white border-2 border-dashed border-slate-300 rounded-xl flex items-center justify-center p-2 min-h-[200px]">
-                          {slide.imageUrl ? (
+                        <div className="bg-slate-200 border-2 border-dashed border-slate-300 rounded-xl flex flex-col items-center justify-center p-2 min-h-[300px]">
+                          {slide.videoUrl ? (
+                            <div className="text-center">
+                              <VideoIcon size={48} className="text-blue-500 mx-auto mb-2" />
+                              <span className="text-slate-600 font-medium">Video Akan Diputar</span>
+                              <p className="text-xs text-slate-500 truncate max-w-xs mt-2 px-4">{slide.videoUrl}</p>
+                            </div>
+                          ) : slide.imageUrl ? (
                             <img src={slide.imageUrl} alt="Preview" className="max-h-64 object-contain rounded-lg" />
                           ) : (
-                            <span className="text-slate-400 font-medium">Belum ada gambar</span>
+                            <span className="text-slate-500 font-medium">Belum ada preview.</span>
                           )}
                         </div>
                       </div>

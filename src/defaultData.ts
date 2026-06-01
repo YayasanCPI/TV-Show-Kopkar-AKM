@@ -1,4 +1,18 @@
-import { Slide } from './types';
+import { Slide, Settings } from './types';
+
+export const defaultSettings: Settings = {
+  marqueeText: [
+    "SELAMAT DATANG DI LAYANAN INFORMASI DIGITAL KOPERASI JASA ADARO KARYA MANDIRI",
+    "MITRA FINANSIAL TERPERCAYA ANDA SEJAK 1995",
+    "HOTLINE SIMPAN PINJAM: 082152386718",
+    "KOPKARINDO TRAVEL & UMROH: 085248626532",
+    "VOUCHER BELANJA MARIZA MART: 08115510107",
+    "DOWNLOAD APLIKASI KOPKAR AKM DI GOOGLE PLAY STORE SEKARANG!"
+  ],
+  widgetEnabled: true,
+  widgetTitle: "INFO PENTING",
+  widgetText: "Jam Layanan: Senin - Jumat (08:00 - 16:00) | Update Saldo setiap akhir bulan."
+};
 
 export const defaultSlides: Slide[] = [
   {

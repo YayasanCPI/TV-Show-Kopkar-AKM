@@ -16,6 +16,7 @@ export interface Slide {
   socials?: Contact[];
   timeline?: HistoryEvent[];
   imageUrl?: string;
+  videoUrl?: string;
 }
 
 export interface Service {
@@ -33,5 +34,12 @@ export interface HistoryEvent {
   year: string;
   title: string;
   description: string;
+}
+
+export interface Settings {
+  marqueeText: string[];
+  widgetEnabled: boolean;
+  widgetTitle: string;
+  widgetText: string;
 }
 

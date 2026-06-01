@@ -1,32 +1,52 @@
 import React, { useEffect, useState } from 'react';
 import { HashRouter, Routes, Route } from 'react-router-dom';
 import SlideCarousel from './components/SlideCarousel';
-import { Slide } from './types';
+import { Slide, Settings } from './types';
 import { Loader2 } from 'lucide-react';
 import Header from './components/Header';
 import Marquee from './components/Marquee';
 import AdminPanel from './components/AdminPanel';
-import { defaultSlides } from './defaultData';
+import { defaultSlides, defaultSettings } from './defaultData';
 import { ErrorBoundary } from './ErrorBoundary';
 
 function DigitalSignage() {
   const [slides, setSlides] = useState<Slide[]>([]);
+  const [settings, setSettings] = useState<Settings>(defaultSettings);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   // Auto-refresh slides periodically
   useEffect(() => {
-    const fetchSlides = async () => {
+    const fetchData = async () => {
       try {
-        const response = await fetch('/api/slides');
-        if (!response.ok) {
-          throw new Error('Failed to fetch slides');
+        // Fetch Slides
+        const slidesRes = await fetch('/api/slides');
+        if (!slidesRes.ok) throw new Error('Failed to fetch slides');
+        const slidesData = await slidesRes.json();
+        setSlides(slidesData);
+        localStorage.setItem('slidedata-fallback', JSON.stringify(slidesData));
+        
+        // Fetch Settings
+        const settingsRes = await fetch('/api/settings');
+        if (settingsRes.ok) {
+          const settingsData = await settingsRes.json();
+          if (settingsData && Object.keys(settingsData).length > 0) {
+            setSettings(settingsData);
+            localStorage.setItem('settings-fallback', JSON.stringify(settingsData));
+          }
         }
-        const data = await response.json();
-        setSlides(data);
-        localStorage.setItem('slidedata-fallback', JSON.stringify(data));
       } catch (err: any) {
         console.log('Falling back to local storage or default data due to api error:', err);
+        
+        // Settings fallback
+        const localSettings = localStorage.getItem('settings-fallback');
+        if (localSettings) {
+          setSettings(JSON.parse(localSettings));
+        } else {
+          setSettings(defaultSettings);
+        }
+
+        // Slides fallback
         const localData = localStorage.getItem('slidedata-fallback');
         if (localData) {
           setSlides(JSON.parse(localData));
@@ -38,8 +58,8 @@ function DigitalSignage() {
       }
     };
 
-    fetchSlides();
-    const interval = setInterval(fetchSlides, 30000); // Check for new slides every 30s
+    fetchData();
+    const interval = setInterval(fetchData, 30000); // Check for new slides every 30s
     return () => clearInterval(interval);
   }, []);
 
@@ -69,10 +89,22 @@ function DigitalSignage() {
       <div className="absolute top-[40%] left-[30%] w-[30%] h-[30%] bg-indigo-900/20 rounded-full blur-[100px] pointer-events-none mix-blend-screen"></div>
       
       <Header />
+      {settings.widgetEnabled && (
+        <div className="h-12 bg-slate-900 border-b border-white/5 flex items-center shrink-0 px-12 z-40 overflow-hidden relative">
+          <div className="flex items-center gap-3">
+             <span className="font-bold text-sm bg-blue-600/20 text-blue-400 px-3 py-1 rounded-md border border-blue-500/20 uppercase tracking-widest">
+                {settings.widgetTitle}
+             </span>
+             <span className="text-slate-300 font-medium tracking-wide">
+                {settings.widgetText}
+             </span>
+          </div>
+        </div>
+      )}
       <div className="flex-1 relative w-full h-full overflow-hidden z-10">
         <SlideCarousel slides={slides} />
       </div>
-      <Marquee />
+      <Marquee settings={settings} />
     </div>
   );
 }

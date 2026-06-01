@@ -27,7 +27,15 @@ export default function FlyerSlide({ slide }: Props) {
       <div className="w-full flex-grow flex items-center justify-center overflow-hidden rounded-[4rem] border border-white/10 bg-slate-900/40 backdrop-blur-2xl shadow-2xl relative p-8">
         <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent pointer-events-none"></div>
         
-        {slide.imageUrl ? (
+        {slide.videoUrl ? (
+          <video 
+            src={slide.videoUrl} 
+            autoPlay 
+            loop 
+            muted 
+            className="w-full h-full object-contain rounded-[2rem] drop-shadow-2xl relative z-10"
+          />
+        ) : slide.imageUrl ? (
           <img 
             src={slide.imageUrl} 
             alt={slide.title || "Flyer Informasi"} 
@@ -36,7 +44,7 @@ export default function FlyerSlide({ slide }: Props) {
         ) : (
           <div className="flex flex-col items-center justify-center text-slate-500 border-2 border-dashed border-white/10 m-8 rounded-[3rem] w-[calc(100%-4rem)] h-[calc(100%-4rem)] bg-slate-800/30">
             <span className="text-4xl mb-6 font-bold tracking-widest uppercase text-cyan-400/50 font-display">Area Flyer / Banner Promosi</span>
-            <span className="text-2xl tracking-wider text-slate-400 font-light">Gunakan Admin Panel untuk mengunggah gambar</span>
+            <span className="text-2xl tracking-wider text-slate-400 font-light">Gunakan Admin Panel untuk mengunggah gambar atau video</span>
           </div>
         )}
       </div>
