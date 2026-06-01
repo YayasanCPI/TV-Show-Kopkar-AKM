@@ -7,6 +7,7 @@ import Header from './components/Header';
 import Marquee from './components/Marquee';
 import AdminPanel from './components/AdminPanel';
 import { defaultSlides } from './defaultData';
+import { ErrorBoundary } from './ErrorBoundary';
 
 function DigitalSignage() {
   const [slides, setSlides] = useState<Slide[]>([]);
@@ -78,11 +79,13 @@ function DigitalSignage() {
 
 export default function App() {
   return (
-    <HashRouter>
-      <Routes>
-        <Route path="/" element={<DigitalSignage />} />
-        <Route path="/admin" element={<AdminPanel />} />
-      </Routes>
-    </HashRouter>
+    <ErrorBoundary>
+      <HashRouter>
+        <Routes>
+          <Route path="/" element={<DigitalSignage />} />
+          <Route path="/admin" element={<AdminPanel />} />
+        </Routes>
+      </HashRouter>
+    </ErrorBoundary>
   );
 }
