@@ -7,6 +7,7 @@ import Header from './components/Header';
 import Marquee from './components/Marquee';
 import AdminPanel from './components/AdminPanel';
 import SmartNotification from './components/SmartNotification';
+import AbsensiWidget from './components/AbsensiWidget';
 import { defaultSlides, defaultSettings } from './defaultData';
 import { ErrorBoundary } from './ErrorBoundary';
 
@@ -114,15 +115,16 @@ function DigitalSignage() {
       
       <Header />
       {settings.widgetEnabled && (
-        <div className="h-12 bg-slate-900 border-b border-white/5 flex items-center shrink-0 px-12 z-40 overflow-hidden relative">
-          <div className="flex items-center gap-3">
+        <div className="h-12 bg-slate-900 border-b border-white/5 flex items-center shrink-0 px-12 z-40 overflow-hidden relative justify-between">
+          <div className="flex items-center gap-3 flex-shrink-0">
              <span className="font-bold text-sm bg-blue-600/20 text-blue-400 px-3 py-1 rounded-md border border-blue-500/20 uppercase tracking-widest">
                 {settings.widgetTitle}
              </span>
-             <span className="text-slate-300 font-medium tracking-wide">
+             <span className="text-slate-300 font-medium tracking-wide max-w-xl truncate">
                 {settings.widgetText}
              </span>
           </div>
+          <AbsensiWidget />
         </div>
       )}
       <div className="flex-1 relative w-full h-full overflow-hidden z-10">
