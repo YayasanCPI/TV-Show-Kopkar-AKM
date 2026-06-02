@@ -2,10 +2,13 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Slide, Settings } from '../types';
 import { Loader2, Save, Image as ImageIcon, Settings as SettingsIcon, CheckCircle, Video as VideoIcon, Bell } from 'lucide-react';
 import { defaultSlides, defaultSettings } from '../defaultData';
+import SlideCarousel from './SlideCarousel';
+import { Eye } from 'lucide-react';
 
 export default function AdminPanel() {
  const [slides, setSlides] = useState<Slide[]>([]);
  const [settings, setSettings] = useState<Settings>(defaultSettings);
+  const [previewSlide, setPreviewSlide] = useState<Slide | null>(null);
  const [loading, setLoading] = useState(true);
  const [saving, setSaving] = useState(false);
  const [message, setMessage] = useState('');

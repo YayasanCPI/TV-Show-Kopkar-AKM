@@ -63,6 +63,14 @@ export default function SlideCarousel({ slides }: SlideCarouselProps) {
  return <ContactSlide slide={slide} />;
  case 'flyer':
  return <FlyerSlide slide={slide} />;
+ case 'laporan':
+ return <LaporanSlide slide={slide} />;
+ case 'teladan':
+ return <TeladanSlide slide={slide} />;
+ case 'agenda':
+ return <AgendaSlide slide={slide} />;
+ case 'jadwal-sholat':
+ return <JadwalSholatSlide slide={slide} />;
  default:
  return <div>Unknown slide type: {slide.type}</div>;
  }
