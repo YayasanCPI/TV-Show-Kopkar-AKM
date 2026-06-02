@@ -39,7 +39,7 @@ export default function Header({ settings }: HeaderProps) {
  <div className="absolute inset-0 bg-blue-500 opacity-40 rounded-full"></div>
  <div className="w-24 h-24 bg-white border border-blue-500/30 rounded-full flex items-center justify-center relative z-10 shadow-xl overflow-hidden p-2">
  {settings.logoUrl ? (
- <img src={settings.logoUrl} alt="Logo KOPKAR AKM" className="w-full h-full object-contain max-w-full max-h-full" referrerPolicy="no-referrer" crossOrigin="anonymous" />
+ <img src={settings.logoUrl} alt="Logo KOPKAR AKM" className="w-full h-full object-contain max-w-full max-h-full" />
  ) : (
  <Landmark size={48} className="text-blue-500" />
  )}
