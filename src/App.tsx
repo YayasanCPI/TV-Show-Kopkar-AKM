@@ -132,9 +132,9 @@ function DigitalSignage() {
   return (
     <div className="flex flex-col h-screen w-full bg-black overflow-hidden font-sans text-white relative">
       {/* Animated glowing orbs in the background */}
-      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-600/20 rounded-full blur-[120px] pointer-events-none mix-blend-screen"></div>
-      <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-cyan-700/20 rounded-full blur-[150px] pointer-events-none mix-blend-screen"></div>
-      <div className="absolute top-[40%] left-[30%] w-[30%] h-[30%] bg-indigo-900/20 rounded-full blur-[100px] pointer-events-none mix-blend-screen"></div>
+      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-[radial-gradient(circle,rgba(37,99,235,0.2)_0%,transparent_70%)] rounded-full pointer-events-none mix-blend-screen"></div>
+      <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-[radial-gradient(circle,rgba(14,116,144,0.2)_0%,transparent_70%)] rounded-full pointer-events-none mix-blend-screen"></div>
+      <div className="absolute top-[40%] left-[30%] w-[30%] h-[30%] bg-[radial-gradient(circle,rgba(49,46,129,0.2)_0%,transparent_70%)] rounded-full pointer-events-none mix-blend-screen"></div>
       
       <Header settings={settings} />
       {settings.widgetEnabled && (
