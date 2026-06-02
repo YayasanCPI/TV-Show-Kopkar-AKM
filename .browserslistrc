@@ -1,0 +1,5 @@
+defaults
+Android >= 4.4
+Chrome >= 49
+Safari >= 9
+iOS >= 9

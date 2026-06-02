@@ -1,4 +1,3 @@
-import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
 import {defineConfig} from 'vite';
@@ -11,18 +10,10 @@ export default defineConfig(() => {
   return {
     base: './',
     build: {
-      cssMinify: 'lightningcss',
       target: ['es2015'],
-    },
-    css: {
-      transformer: 'lightningcss',
-      lightningcss: {
-        targets: browserslistToTargets(browserslist('defaults, Android >= 4.4, Chrome >= 49, Safari >= 9, iOS >= 9'))
-      }
     },
     plugins: [
       react(), 
-      tailwindcss(),
       legacy({
         targets: ['defaults', 'Android >= 4.4', 'Chrome >= 49', 'Safari >= 9', 'iOS >= 9'],
         additionalLegacyPolyfills: ['regenerator-runtime/runtime']
