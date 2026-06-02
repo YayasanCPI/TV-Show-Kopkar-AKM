@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Landmark } from 'lucide-react';
-import logoImage from '../assets/logo.png';
+import { Settings } from '../types';
 
-export default function Header() {
+interface HeaderProps {
+  settings: Settings;
+}
+
+export default function Header({ settings }: HeaderProps) {
   const [time, setTime] = useState(new Date());
 
   useEffect(() => {
@@ -33,8 +37,12 @@ export default function Header() {
       <div className="flex items-center gap-8">
         <div className="relative">
           <div className="absolute inset-0 bg-blue-500 blur-lg opacity-40 rounded-full"></div>
-          <div className="w-24 h-24 bg-white border border-blue-500/30 rounded-full flex items-center justify-center relative z-10 shadow-xl overflow-hidden">
-            <img src={logoImage} alt="Logo KOPKAR AKM" className="w-full h-full object-contain p-2" />
+          <div className="w-24 h-24 bg-white border border-blue-500/30 rounded-full flex items-center justify-center relative z-10 shadow-xl overflow-hidden p-2">
+            {settings.logoUrl ? (
+              <img src={settings.logoUrl} alt="Logo KOPKAR AKM" className="w-full h-full object-contain" />
+            ) : (
+              <Landmark size={48} className="text-blue-500" />
+            )}
           </div>
         </div>
         <div className="flex flex-col justify-center">

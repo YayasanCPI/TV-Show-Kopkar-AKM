@@ -67,7 +67,7 @@ export default function SlideCarousel({ slides }: SlideCarouselProps) {
 
   return (
     <div className="relative w-full h-full overflow-hidden bg-transparent text-white">
-      <AnimatePresence mode="sync">
+      <AnimatePresence mode="wait">
         <motion.div
           key={currentSlide.id}
           initial={{ opacity: 0, scale: 0.96 }}

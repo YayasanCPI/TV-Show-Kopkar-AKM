@@ -266,6 +266,16 @@ export default function AdminPanel() {
                       className="w-full border border-slate-300 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-slate-200 disabled:text-slate-400"
                     />
                   </div>
+                  <div className="pt-2">
+                    <label className="block text-sm font-medium text-slate-700 mb-1">Logo Koperasi (URL)</label>
+                    <input
+                      type="text"
+                      value={settings.logoUrl || ''}
+                      onChange={(e) => updateSettings('logoUrl', e.target.value)}
+                      placeholder="Contoh: https://i.ibb.co.com/.../logo.png"
+                      className="w-full border border-slate-300 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                    />
+                  </div>
                 </div>
               </div>
 

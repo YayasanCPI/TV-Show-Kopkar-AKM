@@ -1,7 +1,6 @@
 import React from 'react';
 import { Slide } from '../../types';
 import { Landmark } from 'lucide-react';
-import logoImage from '../../assets/logo.png';
 
 interface Props {
   slide: Slide;
@@ -12,10 +11,10 @@ export default function HeroSlide({ slide }: Props) {
     <div className="w-full h-full flex flex-col items-center justify-center text-center space-y-16 relative z-10">
       <div className="flex flex-col items-center justify-center relative">
         <div className="absolute inset-0 bg-blue-500/20 blur-[100px] rounded-full"></div>
-        <div className="w-64 h-64 bg-white/10 backdrop-blur-2xl text-cyan-400 rounded-full flex items-center justify-center shadow-[0_0_80px_rgba(59,130,246,0.3)] border border-white/20 mb-8 relative z-10 overflow-hidden p-8">
+        <div className="w-64 h-64 bg-white/10 backdrop-blur-2xl text-cyan-400 rounded-full flex items-center justify-center shadow-[0_0_80px_rgba(59,130,246,0.3)] border border-white/20 mb-8 relative z-10 overflow-hidden p-4">
           {slide.visual === 'logo' || slide.imageUrl ? (
             <img 
-              src={slide.imageUrl || logoImage} 
+              src={slide.imageUrl || "https://i.ibb.co.com/WvTwLMn5/image-1.png"} 
               alt="Logo KOPKAR" 
               className="w-full h-full object-contain"
             />

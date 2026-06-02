@@ -136,7 +136,7 @@ function DigitalSignage() {
       <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-cyan-700/20 rounded-full blur-[150px] pointer-events-none mix-blend-screen"></div>
       <div className="absolute top-[40%] left-[30%] w-[30%] h-[30%] bg-indigo-900/20 rounded-full blur-[100px] pointer-events-none mix-blend-screen"></div>
       
-      <Header />
+      <Header settings={settings} />
       {settings.widgetEnabled && (
         <div className="h-12 bg-slate-900 border-b border-white/5 flex items-center shrink-0 px-12 z-40 overflow-hidden relative justify-between">
           <div className="flex items-center gap-3 flex-shrink-0">

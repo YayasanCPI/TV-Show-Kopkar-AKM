@@ -42,5 +42,6 @@ export interface Settings {
   widgetTitle: string;
   widgetText: string;
   appsScriptUrl?: string;
+  logoUrl?: string;
 }
 
