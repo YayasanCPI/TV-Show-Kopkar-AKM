@@ -1,4 +1,6 @@
-import React, { useEffect, useState } from 'react';
+const fs = require('fs');
+
+const code = `import React, { useEffect, useState } from 'react';
 import { Users } from 'lucide-react';
 
 interface AbsensiData {
@@ -36,10 +38,10 @@ export default function AbsensiWidget() {
         } else {
           d = new Date(dateStr);
           if (isNaN(d.getTime())) {
-            const parts = dateStr.split(/[\/\-]/);
+            const parts = dateStr.split(/[\\/\\-]/);
             if (parts.length === 3) {
-              if (parts[0].length <= 2 && parts[2].length === 4) d = new Date(`${parts[2]}/${parts[1]}/${parts[0]}`);
-              else if (parts[0].length === 4) d = new Date(`${parts[0]}/${parts[1]}/${parts[2]}`);
+              if (parts[0].length <= 2 && parts[2].length === 4) d = new Date(\`\${parts[2]}/\${parts[1]}/\${parts[0]}\`);
+              else if (parts[0].length === 4) d = new Date(\`\${parts[0]}/\${parts[1]}/\${parts[2]}\`);
             }
           }
         }
@@ -143,10 +145,10 @@ export default function AbsensiWidget() {
     <div className="flex items-center gap-4 border-l border-white/10 pl-6 ml-6 h-8">
       <div className="flex items-center gap-2">
         <span className="relative flex h-3 w-3">
-          <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${pingClass}`}></span>
-          <span className={`relative inline-flex rounded-full h-3 w-3 ${dotClass}`}></span>
+          <span className={\`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 \${pingClass}\`}></span>
+          <span className={\`relative inline-flex rounded-full h-3 w-3 \${dotClass}\`}></span>
         </span>
-        <span className={`font-bold text-sm uppercase tracking-widest flex items-center gap-1.5 ${colorClass}`}>
+        <span className={\`font-bold text-sm uppercase tracking-widest flex items-center gap-1.5 \${colorClass}\`}>
           <Users size={16} /> {listLabel} ({displayList.length})
         </span>
       </div>
@@ -155,14 +157,14 @@ export default function AbsensiWidget() {
           {displayList.map((item, i) => (
             <div key={i} className="flex items-center gap-2 mx-4">
               <span className="text-slate-200 font-semibold capitalize">{item.nama}</span>
-              <span className={`font-mono text-[10px] px-1.5 py-0.5 rounded border ${badgeClass}`}>{item.waktu}</span>
+              <span className={\`font-mono text-[10px] px-1.5 py-0.5 rounded border \${badgeClass}\`}>{item.waktu}</span>
             </div>
           ))}
           {/* Duplicate for seamless scrolling */}
           {displayList.map((item, i) => (
             <div key={i + 'dup'} className="flex items-center gap-2 mx-4">
               <span className="text-slate-200 font-semibold capitalize">{item.nama}</span>
-              <span className={`font-mono text-[10px] px-1.5 py-0.5 rounded border ${badgeClass}`}>{item.waktu}</span>
+              <span className={\`font-mono text-[10px] px-1.5 py-0.5 rounded border \${badgeClass}\`}>{item.waktu}</span>
             </div>
           ))}
         </div>
@@ -170,3 +172,7 @@ export default function AbsensiWidget() {
     </div>
   );
 }
+`;
+
+fs.writeFileSync('src/components/AbsensiWidget.tsx', code);
+console.log('done AbsensiWidget override');
