@@ -3,10 +3,19 @@ import react from '@vitejs/plugin-react';
 import path from 'path';
 import {defineConfig} from 'vite';
 
+import legacy from '@vitejs/plugin-legacy';
+
 export default defineConfig(() => {
   return {
     base: './',
-    plugins: [react(), tailwindcss()],
+    plugins: [
+      react(), 
+      tailwindcss(),
+      legacy({
+        targets: ['defaults', 'Android >= 4.4', 'Chrome >= 49', 'Safari >= 9', 'iOS >= 9'],
+        additionalLegacyPolyfills: ['regenerator-runtime/runtime']
+      })
+    ],
     resolve: {
       alias: {
         '@': path.resolve(__dirname, '.'),
