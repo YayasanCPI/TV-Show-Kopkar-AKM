@@ -16,6 +16,7 @@ export default defineConfig(() => {
       react(), 
       legacy({
         targets: ['defaults', 'Android >= 4.4', 'Chrome >= 49', 'Safari >= 9', 'iOS >= 9'],
+        polyfills: true,
         additionalLegacyPolyfills: ['regenerator-runtime/runtime']
       })
     ],

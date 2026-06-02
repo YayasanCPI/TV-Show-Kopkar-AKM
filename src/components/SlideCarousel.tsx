@@ -74,7 +74,7 @@ export default function SlideCarousel({ slides }: SlideCarouselProps) {
  animate={{ opacity: 1 }}
  exit={{ opacity: 0 }}
  transition={{ duration: 0.5, ease: "easeInOut" }}
- className="absolute inset-0 w-full h-full flex flex-col justify-center items-center p-6 md:p-8 mx-auto overflow-hidden"
+ className="absolute inset-0 w-full h-full flex flex-col justify-center items-center p-6 md:p-8 mx-auto overflow-hidden" style={{ willChange: "opacity, transform", transform: "translateZ(0)", backfaceVisibility: "hidden", perspective: 1000 }}
  >
  {renderSlide(currentSlide)}
  </motion.div>
