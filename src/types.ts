@@ -17,6 +17,7 @@ export interface Slide {
  timeline?: HistoryEvent[];
  imageUrl?: string;
  videoUrl?: string;
+  isFullScreen?: boolean;
 }
 
 export interface Service {

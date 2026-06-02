@@ -10,6 +10,7 @@ import LaporanSlide from './slides/LaporanSlide';
 import TeladanSlide from './slides/TeladanSlide';
 import AgendaSlide from './slides/AgendaSlide';
 import JadwalSholatSlide from './slides/JadwalSholatSlide';
+import { FullScreenMedia } from './slides/FullScreenMedia';
 import SavingsSlide from './slides/SavingsSlide';
 import LoansSlide from './slides/LoansSlide';
 import ExtraSlide from './slides/ExtraSlide';
@@ -40,6 +41,9 @@ export default function SlideCarousel({ slides }: SlideCarouselProps) {
  const currentSlide = slides[currentIndex];
 
  const renderSlide = (slide: Slide) => {
+    if (slide.isFullScreen && (slide.imageUrl || slide.videoUrl)) {
+      return <FullScreenMedia slide={slide} />;
+    }
  switch (slide.type) {
  case 'hero':
  return <HeroSlide slide={slide} />;
@@ -81,7 +85,7 @@ export default function SlideCarousel({ slides }: SlideCarouselProps) {
  {slides.map((slide, index) => (
         <div
           key={slide.id}
-          className="absolute inset-0 w-full h-full flex flex-col justify-center items-center p-6 md:p-8 mx-auto overflow-hidden transition-opacity duration-1000 ease-in-out"
+          className={`absolute inset-0 w-full h-full flex flex-col justify-center items-center ${slide.isFullScreen ? 'p-0' : 'p-6 md:p-8'} mx-auto overflow-hidden transition-opacity duration-1000 ease-in-out`}
           style={{ 
             opacity: index === currentIndex ? 1 : 0, 
             pointerEvents: index === currentIndex ? 'auto' : 'none',

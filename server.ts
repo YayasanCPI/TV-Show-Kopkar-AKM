@@ -98,6 +98,17 @@ async function startServer() {
     }
   });
 
+  // API route to proxy absensi data
+  app.get("/api/absensi", async (req, res) => {
+    try {
+      const response = await fetch('https://script.google.com/macros/s/AKfycbz6YajqskEFxko5jVtpK8RS3oI-LUHbaLCUmgCFa-xHZIWSGrxJfB66ng0O0HqR4Arf-g/exec');
+      const data = await response.json();
+      res.json(data);
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to fetch absensi' });
+    }
+  });
+
   // Vite middleware for development
   if (process.env.NODE_ENV !== "production") {
     const vite = await createViteServer({

@@ -18,7 +18,7 @@ export default function AbsensiWidget() {
 
   const fetchAbsensi = async () => {
     try {
-      const API_ABSEN = 'https://script.google.com/macros/s/AKfycbz6YajqskEFxko5jVtpK8RS3oI-LUHbaLCUmgCFa-xHZIWSGrxJfB66ng0O0HqR4Arf-g/exec';
+      const API_ABSEN = '/api/absensi';
       const res = await fetch(API_ABSEN);
       const data = await res.json();
       
