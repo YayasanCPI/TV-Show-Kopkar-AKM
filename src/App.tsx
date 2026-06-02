@@ -8,6 +8,7 @@ import Marquee from './components/Marquee';
 import AdminPanel from './components/AdminPanel';
 import SmartNotification from './components/SmartNotification';
 import AbsensiWidget from './components/AbsensiWidget';
+import AdzanAlert from './components/AdzanAlert';
 import { defaultSlides, defaultSettings } from './defaultData';
 import { ErrorBoundary } from './ErrorBoundary';
 
@@ -157,6 +158,7 @@ function DigitalSignage() {
  )}
  <div className="flex-1 relative w-full h-full overflow-hidden z-10">
  <SmartNotification />
+ <AdzanAlert />
  <SlideCarousel slides={slides} />
  </div>
  <Marquee settings={settings} />
