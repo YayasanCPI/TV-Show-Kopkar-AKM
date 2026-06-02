@@ -26,15 +26,24 @@ const AUTOPLAY_INTERVAL = 10000; // 10 seconds
 export default function SlideCarousel({ slides }: SlideCarouselProps) {
  const [currentIndex, setCurrentIndex] = useState(0);
 
+ const handleNext = () => {
+    setCurrentIndex((prev) => (prev + 1) % slides.length);
+ };
+
  useEffect(() => {
  if (slides.length <= 1) return;
 
- const timer = setInterval(() => {
- setCurrentIndex((prev) => (prev + 1) % slides.length);
- }, AUTOPLAY_INTERVAL);
+ const currentSlide = slides[currentIndex];
+ 
+ if (currentSlide?.videoUrl) {
+    const fallbackTimer = setTimeout(handleNext, 300000); // 5 minutes fallback
+    return () => clearTimeout(fallbackTimer);
+ }
+
+ const timer = setInterval(handleNext, AUTOPLAY_INTERVAL);
 
  return () => clearInterval(timer);
- }, [slides.length]);
+ }, [currentIndex, slides]);
 
  if (!slides.length) return null;
 
@@ -42,7 +51,7 @@ export default function SlideCarousel({ slides }: SlideCarouselProps) {
 
  const renderSlide = (slide: Slide) => {
     if (slide.isFullScreen && (slide.imageUrl || slide.videoUrl)) {
-      return <FullScreenMedia slide={slide} />;
+      return <FullScreenMedia slide={slide} onVideoEnded={handleNext} />;
     }
  switch (slide.type) {
  case 'hero':

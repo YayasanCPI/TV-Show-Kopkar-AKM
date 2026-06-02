@@ -5,9 +5,10 @@ import VideoRenderer from '../VideoRenderer';
 
 interface Props {
  slide: Slide;
+ onVideoEnded?: () => void;
 }
 
-export default function FlyerSlide({ slide }: Props) {
+export default function FlyerSlide({ slide, onVideoEnded }: Props) {
  return (
  <div className="w-full h-full flex flex-col items-center justify-center py-4">
  {slide.title && (
@@ -29,7 +30,7 @@ export default function FlyerSlide({ slide }: Props) {
  <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent pointer-events-none"></div>
  
  {slide.videoUrl ? (
- <VideoRenderer url={slide.videoUrl} className="max-w-full max-h-full object-contain rounded-[1rem] md:rounded-[2rem] drop-shadow-2xl relative z-10 mx-auto my-auto" />
+ <VideoRenderer url={slide.videoUrl} className="max-w-full max-h-full object-contain rounded-[1rem] md:rounded-[2rem] drop-shadow-2xl relative z-10 mx-auto my-auto" onEnded={onVideoEnded} />
  ) : slide.imageUrl ? (
  <img 
  src={slide.imageUrl} 
