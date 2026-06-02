@@ -1,6 +1,6 @@
 export interface Slide {
  id: number;
- type: 'hero' | 'about' | 'history' | 'management' | 'business' | 'savings' | 'loans' | 'extra' | 'app' | 'contact' | 'flyer';
+ type: 'hero' | 'about' | 'history' | 'management' | 'business' | 'savings' | 'loans' | 'extra' | 'app' | 'contact' | 'flyer' | 'laporan' | 'teladan' | 'agenda' | 'jadwal-sholat';
  title?: string;
  subtitle?: string;
  description?: string;

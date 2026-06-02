@@ -366,7 +366,26 @@ export default function AdminPanel() {
  </button>
  </div>
 
- <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+ <div className="mb-6">
+    <label className="block text-sm font-medium text-slate-700 mb-2">Tipe Slide</label>
+    <select 
+      value={slide.type} 
+      onChange={(e) => updateSlideText(slide.id, 'type', e.target.value)}
+      className="w-full border border-slate-300 px-4 py-2.5 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+    >
+      <option value="flyer">Flyer / Poster Umum</option>
+      <option value="laporan">Laporan Capaian (Infografis)</option>
+      <option value="teladan">Karyawan Teladan</option>
+      <option value="agenda">Agenda Koperasi</option>
+      <option value="jadwal-sholat">Jadwal Sholat (Otomatis)</option>
+      <option value="hero">Hero (Opening)</option>
+      <option value="about">Tentang Koperasi</option>
+      <option value="business">Bisnis & Layanan</option>
+      <option value="savings">Simpanan</option>
+      <option value="loans">Pinjaman</option>
+    </select>
+  </div>
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
  {slide.title !== undefined && (
  <div>
  <label className="block text-sm font-medium text-slate-700 mb-2">
@@ -411,10 +430,10 @@ export default function AdminPanel() {
  )}
 
  {/* Specific fields based on slide type */}
- {slide.type === 'flyer' && (
+ {['flyer', 'teladan', 'laporan', 'agenda', 'jadwal-sholat', 'hero', 'business'].includes(slide.type) && (
  <div className="pt-6 border-t border-slate-200">
- <h4 className="font-bold text-slate-800 mb-4">Gambar / Video Promosi (Flyer)</h4>
- <p className="text-sm text-slate-500 mb-4">Anda dapat menampilkan satu gambar poster atau memutar sebuah video.</p>
+ <h4 className="font-bold text-slate-800 mb-4">Gambar / Media Visual</h4>
+ <p className="text-sm text-slate-500 mb-4">Unggah gambar yang sesuai untuk konten slide ini.</p>
  
  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
  <div>
