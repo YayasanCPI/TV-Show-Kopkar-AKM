@@ -33,13 +33,13 @@ export default function FlyerSlide({ slide }: Props) {
             autoPlay 
             loop 
             muted 
-            className="w-full h-full object-contain rounded-[2rem] drop-shadow-2xl relative z-10"
+            className="max-w-full max-h-full object-contain rounded-[2rem] drop-shadow-2xl relative z-10"
           />
         ) : slide.imageUrl ? (
           <img 
             src={slide.imageUrl} 
             alt={slide.title || "Flyer Informasi"} 
-            className="w-full h-full object-contain rounded-[2rem] drop-shadow-2xl relative z-10"
+            className="max-w-full max-h-full object-contain rounded-[2rem] drop-shadow-2xl relative z-10"
           />
         ) : (
           <div className="flex flex-col items-center justify-center text-slate-500 border-2 border-dashed border-white/10 m-8 rounded-[3rem] w-[calc(100%-4rem)] h-[calc(100%-4rem)] bg-slate-800/30">
