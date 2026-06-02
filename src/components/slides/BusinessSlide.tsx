@@ -11,7 +11,7 @@ export default function BusinessSlide({ slide }: Props) {
     <div className="w-full h-full flex flex-col items-center justify-center">
       <div className="text-center mb-16 relative">
         <div className="absolute inset-0 bg-blue-500/20 blur-[100px] -z-10"></div>
-        <h1 className="text-6xl md:text-7xl lg:text-[5.5rem] font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-500 mb-6 uppercase tracking-widest flex justify-center items-center gap-6 drop-shadow-lg font-display">
+        <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-500 mb-6 uppercase tracking-widest flex flex-wrap justify-center items-center gap-4 text-center drop-shadow-lg font-display">
           <BriefcaseBusiness size={80} className="text-cyan-400 drop-shadow-[0_0_15px_rgba(34,211,238,0.5)]" />
           {slide.title}
         </h1>

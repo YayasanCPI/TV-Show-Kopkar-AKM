@@ -67,14 +67,14 @@ export default function SlideCarousel({ slides }: SlideCarouselProps) {
 
   return (
     <div className="relative w-full h-full overflow-hidden bg-transparent text-white">
-      <AnimatePresence mode="wait">
+      <AnimatePresence mode="sync">
         <motion.div
           key={currentSlide.id}
           initial={{ opacity: 0, scale: 0.96 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 1.04 }}
           transition={{ duration: 1.5, ease: "easeInOut" }}
-          className="absolute inset-0 w-full h-full flex flex-col justify-center items-center p-8 md:p-12 lg:p-16"
+          className="absolute inset-0 w-full h-full flex flex-col justify-center items-center p-8 sm:p-12 md:p-16 w-[95%] mx-auto"
         >
           {renderSlide(currentSlide)}
         </motion.div>

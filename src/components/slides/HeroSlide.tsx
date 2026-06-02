@@ -18,11 +18,11 @@ export default function HeroSlide({ slide }: Props) {
         <div className="w-40 h-[2px] bg-gradient-to-r from-transparent via-blue-500 to-transparent mx-auto"></div>
       </div>
       
-      <h1 className="text-6xl md:text-7xl lg:text-[7rem] font-display font-black text-transparent bg-clip-text bg-gradient-to-br from-white via-slate-300 to-cyan-400 leading-tight max-w-7xl mx-auto drop-shadow-2xl uppercase tracking-widest">
+      <h1 className="text-4xl md:text-5xl lg:text-6xl lg:text-7xl xl:text-8xl font-display font-black text-transparent bg-clip-text bg-gradient-to-br from-white via-slate-300 to-cyan-400 leading-tight max-w-7xl mx-auto drop-shadow-2xl uppercase tracking-widest">
         {slide.title}
       </h1>
       
-      <p className="text-4xl md:text-5xl text-cyan-200/80 font-medium tracking-[0.2em] uppercase max-w-5xl mx-auto leading-normal">
+      <p className="text-4xl md:text-5xl text-cyan-200/80 font-medium tracking-[0.2em] uppercase max-w-5xl w-[95%] mx-auto leading-normal">
         {slide.subtitle}
       </p>
     </div>

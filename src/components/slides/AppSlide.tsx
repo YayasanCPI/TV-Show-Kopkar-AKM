@@ -11,7 +11,7 @@ export default function AppSlide({ slide }: Props) {
     <div className="w-full h-full flex flex-col items-center justify-center">
       <div className="text-center mb-16 max-w-6xl relative">
         <div className="absolute inset-0 bg-blue-500/20 blur-[100px] -z-10"></div>
-        <h1 className="text-6xl md:text-7xl lg:text-[5.5rem] font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-500 mb-8 uppercase tracking-widest drop-shadow-lg font-display">
+        <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-500 mb-8 uppercase tracking-widest drop-shadow-lg font-display">
           {slide.title}
         </h1>
         <p className="text-3xl text-slate-300/80 font-medium leading-relaxed tracking-[0.1em] uppercase">

@@ -12,7 +12,7 @@ export default function FlyerSlide({ slide }: Props) {
       {slide.title && (
         <div className="text-center mb-8 shrink-0 relative">
           <div className="absolute inset-0 bg-blue-500/20 blur-[80px] -z-10"></div>
-          <h1 className="text-5xl lg:text-[4.5rem] font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-500 mb-4 uppercase tracking-widest flex justify-center items-center gap-6 drop-shadow-lg font-display">
+          <h1 className="text-5xl lg:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-500 mb-4 uppercase tracking-widest flex flex-wrap justify-center items-center gap-4 text-center drop-shadow-lg font-display">
             <Megaphone size={64} className="text-indigo-400 drop-shadow-[0_0_15px_rgba(129,140,248,0.5)]" />
             {slide.title}
           </h1>

@@ -15,7 +15,7 @@ export default function ContactSlide({ slide }: Props) {
 
       <div className="text-center mb-16 relative z-10">
         <div className="absolute inset-0 bg-blue-500/20 blur-[100px] -z-10"></div>
-        <h1 className="text-6xl md:text-7xl lg:text-[5.5rem] font-black mb-6 uppercase tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-500 drop-shadow-lg font-display">
+        <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black mb-6 uppercase tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-500 drop-shadow-lg font-display">
           {slide.title}
         </h1>
         <div className="w-64 h-[2px] bg-gradient-to-r from-transparent via-blue-500 to-transparent mx-auto"></div>

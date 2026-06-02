@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Landmark } from 'lucide-react';
+import logoImage from '../assets/logo.png';
 
 export default function Header() {
   const [time, setTime] = useState(new Date());
@@ -33,7 +34,7 @@ export default function Header() {
         <div className="relative">
           <div className="absolute inset-0 bg-blue-500 blur-lg opacity-40 rounded-full"></div>
           <div className="w-24 h-24 bg-white border border-blue-500/30 rounded-full flex items-center justify-center relative z-10 shadow-xl overflow-hidden">
-            <img src="https://i.ibb.co.com/WvTwLMn5/image-1.png" alt="Logo KOPKAR AKM" className="w-full h-full object-contain p-2" />
+            <img src={logoImage} alt="Logo KOPKAR AKM" className="w-full h-full object-contain p-2" />
           </div>
         </div>
         <div className="flex flex-col justify-center">

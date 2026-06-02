@@ -11,7 +11,7 @@ export default function HistorySlide({ slide }: Props) {
     <div className="w-full h-full flex flex-col items-center justify-center">
       <div className="text-center mb-16 relative">
         <div className="absolute inset-0 bg-blue-500/20 blur-[100px] -z-10"></div>
-        <h1 className="text-6xl md:text-7xl lg:text-[5.5rem] font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-500 mb-6 uppercase tracking-widest flex justify-center items-center gap-6 drop-shadow-lg font-display">
+        <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-500 mb-6 uppercase tracking-widest flex flex-wrap justify-center items-center gap-4 text-center drop-shadow-lg font-display">
           <History size={80} className="text-cyan-400 drop-shadow-[0_0_15px_rgba(34,211,238,0.5)]" />
           {slide.title}
         </h1>
@@ -20,8 +20,8 @@ export default function HistorySlide({ slide }: Props) {
         </p>
       </div>
 
-      <div className="w-full max-w-[85rem] mx-auto flex flex-col justify-center flex-grow">
-        <div className="grid grid-cols-3 xl:grid-cols-4 gap-8 w-full">
+      <div className="w-full max-w-7xl w-[95%] mx-auto flex flex-col justify-center flex-grow">
+        <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 w-full">
           {slide.timeline?.map((event, idx) => (
             <div key={idx} className="bg-slate-900/40 backdrop-blur-xl border border-white/5 hover:border-blue-500/50 transition-all duration-300 hover:-translate-y-2 rounded-3xl p-8 shadow-2xl flex flex-col items-start relative overflow-hidden group">
               <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-600 to-indigo-400 transform origin-left transition-transform duration-300 scale-x-0 group-hover:scale-x-100"></div>

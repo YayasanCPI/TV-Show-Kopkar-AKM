@@ -11,7 +11,7 @@ export default function SavingsSlide({ slide }: Props) {
     <div className="w-full h-full flex flex-col items-center justify-center">
       <div className="relative mb-24">
         <div className="absolute inset-0 bg-blue-500/20 blur-[100px] -z-10"></div>
-        <h1 className="text-6xl md:text-7xl lg:text-[5.5rem] font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-500 text-center uppercase tracking-widest drop-shadow-lg font-display">
+        <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-500 text-center uppercase tracking-widest drop-shadow-lg font-display">
           {slide.title}
         </h1>
       </div>
