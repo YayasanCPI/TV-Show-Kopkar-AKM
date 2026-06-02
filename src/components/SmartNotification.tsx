@@ -168,7 +168,7 @@ export default function SmartNotification() {
  // If type changed or it became active, reset hasPlayed to allow audio to play again
  if (currentNotif?.type !== prev?.type) {
  setHasPlayed(false);
- if (currentNotif && (currentNotif.type === 'morning' || currentNotif.type === 'evening')) {
+ if (currentNotif && (currentNotif.type === 'morning' || currentNotif.type === 'evening' || currentNotif.type === 'lunch')) {
  fetchAbsensi();
  }
  }
@@ -181,7 +181,7 @@ export default function SmartNotification() {
  
  // Poll absensi every 30 seconds if morning or evening is active
  const absensiPolling = setInterval(() => {
- if (notification && (notification.type === 'morning' || notification.type === 'evening')) {
+ if (notification && (notification.type === 'morning' || notification.type === 'evening' || notification.type === 'lunch')) {
  fetchAbsensi();
  }
  }, 30000);
@@ -232,15 +232,15 @@ export default function SmartNotification() {
  </div>
 
  {/* Absensi Container */}
- {(notification.type === 'morning' || notification.type === 'evening') && (
+ {(notification.type === 'morning' || notification.type === 'evening' || notification.type === 'lunch') && (
  <div className="flex-1 w-full xl:max-w-md bg-slate-800/50 p-8 rounded-3xl border border-slate-700/50 text-left">
  <div className="flex items-center justify-between mb-8">
  <h3 className="text-2xl font-bold text-white flex items-center gap-3">
  <Users className="w-8 h-8 text-indigo-400" />
- {notification.type === 'morning' ? 'Sudah Masuk Hari Ini' : 'Sudah Absen Pulang'}
+ {notification.type === 'morning' || notification.type === 'lunch' ? 'Sudah Masuk Hari Ini' : 'Sudah Absen Pulang'}
  </h3>
  <span className="bg-indigo-500/20 text-indigo-300 px-4 py-1.5 rounded-full text-lg font-bold border border-indigo-500/30">
- {notification.type === 'morning' ? hadirList.length : pulangList.length} Orang
+ {notification.type === 'morning' || notification.type === 'lunch' ? hadirList.length : pulangList.length} Orang
  </span>
  </div>
  
@@ -251,7 +251,7 @@ export default function SmartNotification() {
  </div>
  )}
 
- {!isFetchingAbsen && notification.type === 'morning' && hadirList.length === 0 && (
+ {!isFetchingAbsen && (notification.type === 'morning' || notification.type === 'lunch') && hadirList.length === 0 && (
  <div className="text-center py-10 text-slate-400">
  Belum ada data kehadiran terekam.
  </div>
@@ -263,7 +263,7 @@ export default function SmartNotification() {
  </div>
  )}
 
- {notification.type === 'morning' && hadirList.map((item, i) => (
+ {(notification.type === 'morning' || notification.type === 'lunch') && hadirList.map((item, i) => (
  <div key={i} className="flex items-center justify-between bg-slate-900/50 p-4 rounded-xl border border-slate-700/50">
  <div className="flex items-center gap-3">
  <div className="w-10 h-10 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-sm border border-emerald-500/30 uppercase">

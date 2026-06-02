@@ -19,7 +19,12 @@ function DigitalSignage() {
 
  // Auto-refresh slides periodically
  useEffect(() => {
- const fetchData = async () => {
+ // Hard refresh every 2 hours to completely reset TV Box memory and ensure new data
+    const hardReloadInterval = setInterval(() => {
+      window.location.reload();
+    }, 2 * 60 * 60 * 1000);
+
+    const fetchData = async () => {
  try {
  const localSettings = localStorage.getItem('settings-fallback');
  let currentSettings = localSettings ? JSON.parse(localSettings) : defaultSettings;
