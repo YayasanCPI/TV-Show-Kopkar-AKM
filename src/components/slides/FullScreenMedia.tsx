@@ -1,5 +1,6 @@
 import React from 'react';
 import { Slide } from '../../types';
+import VideoRenderer from '../VideoRenderer';
 
 interface Props {
   slide: Slide;
@@ -11,13 +12,7 @@ export function FullScreenMedia({ slide }: Props) {
   return (
     <div className="w-full h-full bg-black relative flex items-center justify-center overflow-hidden">
       {slide.videoUrl ? (
-        <video 
-          src={slide.videoUrl} 
-          autoPlay 
-          loop 
-          muted 
-          className="w-full h-full object-cover"
-        />
+        <VideoRenderer url={slide.videoUrl} isFullScreenStyle={true} />
       ) : (
         <img 
           src={slide.imageUrl} 

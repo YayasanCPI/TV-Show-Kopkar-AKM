@@ -469,16 +469,16 @@ export default function AdminPanel() {
 
  <div className="mt-6 pt-6 border-t border-slate-200">
  <label className="block text-sm font-medium text-slate-700 mb-2 flex items-center gap-2 text-blue-700">
- <VideoIcon size={16}/> Gunakan Video URL (MP4)
+ <VideoIcon size={16}/> Gunakan Video URL (YouTube / Google Drive / MP4)
  </label>
  <input
  type="text"
  value={slide.videoUrl || ''}
  onChange={(e) => updateSlideVideoUrl(slide.id, e.target.value)}
- placeholder="https://example.com/video.mp4"
+ placeholder="https://youtube.com/watch?v=... atau link Google Drive"
  className="w-full border border-slate-300 px-4 py-2.5 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
  />
- <p className="text-xs text-slate-500 mt-2">Jika Anda memasukkan Video URL, maka gambar di atas akan diabaikan.</p>
+ <p className="text-xs text-slate-500 mt-2">Bisa menggunakan link YouTube, link Google Drive (pastikan akses 'Anyone with link'), atau direct link MP4. Jika menggunakan video, gambar akan diabaikan.</p>
             </div>
 
             <div className="mt-6 pt-6 border-t border-slate-200">
