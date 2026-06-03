@@ -13,12 +13,19 @@ interface Jadwal {
   date: string;
 }
 
-export default function AdzanAlert() {
+export default function AdzanAlert({ onAdzanStateChange }: { onAdzanStateChange?: (isActive: boolean) => void }) {
   const [jadwal, setJadwal] = useState<Jadwal | null>(null);
   const [activeAdzan, setActiveAdzan] = useState<string | null>(null);
 
+  // Notify parent component about adzan state changes
+  useEffect(() => {
+    if (onAdzanStateChange) {
+      onAdzanStateChange(activeAdzan !== null);
+    }
+  }, [activeAdzan, onAdzanStateChange]);
+
   const fetchJadwal = () => {
-    const cityId = '2204'; // Tabalong
+    const cityId = '2108'; // Tabalong (was 2204)
     const today = new Date();
     const year = today.getFullYear();
     const month = String(today.getMonth() + 1).padStart(2, '0');

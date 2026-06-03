@@ -24,7 +24,7 @@ export default function JadwalSholatSlide({ slide }: Props) {
   
   useEffect(() => {
     // ID Kota Tabalong dari API Kemenag
-    const cityId = '2204'; 
+    const cityId = '2108'; 
     const today = new Date();
     const year = today.getFullYear();
     const month = String(today.getMonth() + 1).padStart(2, '0');

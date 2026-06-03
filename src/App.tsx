@@ -11,12 +11,14 @@ import AbsensiWidget from './components/AbsensiWidget';
 import AdzanAlert from './components/AdzanAlert';
 import { defaultSlides, defaultSettings } from './defaultData';
 import { ErrorBoundary } from './ErrorBoundary';
+import ReactPlayer from 'react-player';
 
 function DigitalSignage() {
  const [slides, setSlides] = useState<Slide[]>([]);
  const [settings, setSettings] = useState<Settings>(defaultSettings);
  const [loading, setLoading] = useState(true);
  const [error, setError] = useState<string | null>(null);
+ const [isAdzanPlaying, setIsAdzanPlaying] = useState(false);
 
  // Auto-refresh slides periodically
  useEffect(() => {
@@ -142,6 +144,25 @@ function DigitalSignage() {
  <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-[radial-gradient(circle,rgba(14,116,144,0.2)_0%,transparent_70%)] rounded-full pointer-events-none "></div>
  <div className="absolute top-[40%] left-[30%] w-[30%] h-[30%] bg-[radial-gradient(circle,rgba(49,46,129,0.2)_0%,transparent_70%)] rounded-full pointer-events-none "></div>
  
+ {/* Background Music Player */}
+ {settings.bgMusicEnabled && settings.bgMusicUrl && (
+ <div className="hidden">
+ <ReactPlayer
+ url={settings.bgMusicUrl}
+ playing={!isAdzanPlaying}
+ loop={true}
+ volume={0.4} // Lower volume so it doesn't disturb other activities
+ width="0"
+ height="0"
+ config={{
+ youtube: {
+ playerVars: { showinfo: 0, autoplay: 1 }
+ }
+ }}
+ />
+ </div>
+ )}
+
  <Header settings={settings} />
  {settings.widgetEnabled && (
  <div className="h-12 bg-slate-900 border-b border-white/5 flex items-center shrink-0 px-12 z-40 overflow-hidden relative justify-between">
@@ -158,7 +179,7 @@ function DigitalSignage() {
  )}
  <div className="flex-1 relative w-full h-full overflow-hidden z-10">
  <SmartNotification />
- <AdzanAlert />
+ <AdzanAlert onAdzanStateChange={setIsAdzanPlaying} />
  <SlideCarousel slides={slides} />
  </div>
  <Marquee settings={settings} />

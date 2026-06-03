@@ -285,6 +285,38 @@ export default function AdminPanel() {
  </div>
  </div>
 
+ <div className="bg-slate-50 rounded-xl p-6 border border-slate-200 shadow-sm">
+ <div className="flex items-center justify-between mb-4">
+ <div>
+ <h3 className="text-lg font-bold text-slate-800">Musik Latar (Background Music)</h3>
+ <p className="text-sm text-slate-500 mt-1">Gunakan musik instrumen atau lagu favorit untuk meramaikan tampilan</p>
+ </div>
+ <label className="flex items-center cursor-pointer">
+ <div className="relative">
+ <input type="checkbox" className="sr-only" checked={settings.bgMusicEnabled || false} onChange={(e) => updateSettings('bgMusicEnabled', e.target.checked)} />
+ <div className={`block w-14 h-8 rounded-full transition-colors ${settings.bgMusicEnabled ? 'bg-blue-500' : 'bg-slate-300'}`}></div>
+ <div className={`dot absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition-transform ${settings.bgMusicEnabled ? 'transform translate-x-6' : ''}`}></div>
+ </div>
+ </label>
+ </div>
+ <div className="space-y-4">
+ <div>
+ <label className="block text-sm font-medium text-slate-700 mb-1">URL YouTube / Musik Audio</label>
+ <input
+ type="text"
+ value={settings.bgMusicUrl || ''}
+ onChange={(e) => updateSettings('bgMusicUrl', e.target.value)}
+ disabled={!settings.bgMusicEnabled}
+ placeholder="Contoh: https://www.youtube.com/watch?v=..."
+ className="w-full border border-slate-300 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-slate-200 disabled:text-slate-400"
+ />
+ <p className="text-xs text-orange-600 mt-2 p-2 bg-orange-100 rounded">
+ 💡 <b>Catatan:</b> Kebijakan Auto-play browser mengharuskan interaksi jika ingin memutar musik. Klik salah satu tempat di layar smart TV Anda 1 kali setelah memuat web agar suara bisa hidup (jika tidak kedengaran).
+ </p>
+ </div>
+ </div>
+ </div>
+
  {/* Marquee Block */}
  <div className="bg-slate-50 p-6 rounded-xl border border-slate-200">
  <div className="flex items-center justify-between mb-4">

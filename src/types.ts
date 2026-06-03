@@ -44,5 +44,7 @@ export interface Settings {
  widgetText: string;
  appsScriptUrl?: string;
  logoUrl?: string;
+ bgMusicEnabled?: boolean;
+ bgMusicUrl?: string;
 }
 
