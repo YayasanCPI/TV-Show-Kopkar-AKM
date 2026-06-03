@@ -20,6 +20,7 @@ export default function AbsensiWidget() {
     try {
       const API_ABSEN = '/api/absensi';
       const res = await fetch(API_ABSEN);
+      if (!res.ok) throw new Error(`HTTP error ${res.status}`);
       const data = await res.json();
       
       const targetDate = new Date();
@@ -104,8 +105,11 @@ export default function AbsensiWidget() {
       }
       setPulangList(pData);
 
-    } catch (error) {
-      console.error('Error fetching absensi for widget', error);
+    } catch (error: any) {
+      // Silently ignore network errors during dev server restarts
+      if (error?.message !== 'Failed to fetch') {
+        console.error('Error fetching absensi for widget', error);
+      }
     }
   };
 

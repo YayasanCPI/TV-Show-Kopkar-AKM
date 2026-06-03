@@ -98,13 +98,31 @@ async function startServer() {
     }
   });
 
+  let absensiCache: any = null;
+  let lastAbsensiFetch = 0;
+
   // API route to proxy absensi data
   app.get("/api/absensi", async (req, res) => {
     try {
+      const now = Date.now();
+      // Cache for 3 minutes
+      if (absensiCache && (now - lastAbsensiFetch < 3 * 60 * 1000)) {
+        return res.json(absensiCache);
+      }
+      
       const response = await fetch('https://script.google.com/macros/s/AKfycbz6YajqskEFxko5jVtpK8RS3oI-LUHbaLCUmgCFa-xHZIWSGrxJfB66ng0O0HqR4Arf-g/exec');
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
       const data = await response.json();
+      absensiCache = data;
+      lastAbsensiFetch = now;
       res.json(data);
     } catch (error) {
+      console.error('Proxy Absensi Error:', error);
+      if (absensiCache) {
+        return res.json(absensiCache);
+      }
       res.status(500).json({ error: 'Failed to fetch absensi' });
     }
   });
