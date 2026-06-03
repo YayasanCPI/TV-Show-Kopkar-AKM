@@ -3,6 +3,7 @@ import { Slide, Settings } from '../types';
 import { Loader2, Save, Image as ImageIcon, Settings as SettingsIcon, CheckCircle, Video as VideoIcon, Bell, RefreshCw } from 'lucide-react';
 import { defaultSlides, defaultSettings } from '../defaultData';
 import SlideCarousel from './SlideCarousel';
+import AudioDiagnostic from './AudioDiagnostic';
 import { Eye } from 'lucide-react';
 
 export default function AdminPanel() {
@@ -330,6 +331,9 @@ export default function AdminPanel() {
  <p className="text-xs text-orange-600 mt-2 p-2 bg-orange-100 rounded">
  💡 <b>Catatan:</b> Kebijakan Auto-play browser mengharuskan interaksi jika ingin memutar musik. Klik salah satu tempat di layar smart TV Anda 1 kali setelah memuat web agar suara bisa hidup (jika tidak kedengaran).
  </p>
+ {settings.bgMusicEnabled && settings.bgMusicUrl && (
+   <AudioDiagnostic url={settings.bgMusicUrl} />
+ )}
  </div>
  </div>
  </div>
