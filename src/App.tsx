@@ -181,7 +181,7 @@ function DigitalSignage() {
  </div>
  )}
 
- <Header settings={settings} />
+ <Header settings={settings} isMusicPlaying={settings.bgMusicEnabled && !!settings.bgMusicUrl && !isAdzanPlaying && hasInteracted} />
  {settings.widgetEnabled && (
  <div className="h-12 bg-slate-900 border-b border-white/5 flex items-center shrink-0 px-12 z-40 overflow-hidden relative justify-between">
  <div className="flex items-center gap-3 flex-shrink-0">

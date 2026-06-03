@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Landmark } from 'lucide-react';
+import { Landmark, AudioLines } from 'lucide-react';
 import { Settings } from '../types';
 
 interface HeaderProps {
  settings: Settings;
+ isMusicPlaying?: boolean;
 }
 
-export default function Header({ settings }: HeaderProps) {
+export default function Header({ settings, isMusicPlaying }: HeaderProps) {
  const [time, setTime] = useState(new Date());
 
  useEffect(() => {
@@ -46,9 +47,17 @@ export default function Header({ settings }: HeaderProps) {
  </div>
  </div>
  <div className="flex flex-col justify-center">
+ <div className="flex items-center gap-4">
  <h1 className="text-5xl font-black font-display tracking-[0.2em] text-transparent bg-clip-text bg-gradient-to-r from-white to-blue-200">
  KOPKAR AKM
  </h1>
+ {isMusicPlaying && (
+ <div className="flex items-center justify-center bg-blue-500/20 text-blue-400 px-3 py-1.5 rounded-full border border-blue-500/30 gap-2 mb-1">
+ <AudioLines size={20} className="animate-pulse" />
+ <span className="text-xs uppercase tracking-widest font-bold">Audio</span>
+ </div>
+ )}
+ </div>
  <h2 className="text-[1.4rem] font-medium tracking-[0.3em] text-cyan-400/80 mt-2 uppercase">
  Koperasi Jasa Adaro Karya Mandiri
  </h2>
