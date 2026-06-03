@@ -166,17 +166,15 @@ function DigitalSignage() {
  {settings.bgMusicEnabled && settings.bgMusicUrl && (
  <div className="hidden">
  <ReactPlayer
- url={settings.bgMusicUrl}
- playing={!isAdzanPlaying}
- loop={true}
- volume={0.4} // Lower volume so it doesn't disturb other activities
- width="0"
- height="0"
- config={{
- youtube: {
- playerVars: { showinfo: 0, autoplay: 1 }
- }
- }}
+ {...({
+ url: settings.bgMusicUrl,
+ playing: !isAdzanPlaying,
+ loop: true,
+ volume: 0.4,
+ width: "0",
+ height: "0",
+ onError: (e: any) => console.log('bgMusic error', e)
+ } as any)}
  />
  </div>
  )}
