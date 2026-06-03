@@ -168,13 +168,16 @@ function DigitalSignage() {
  <div className="absolute opacity-0 pointer-events-none w-10 h-10 overflow-hidden -z-50">
  <ReactPlayer
  {...({
- url: formatMediaUrl(settings.bgMusicUrl),
+ url: formatMediaUrl(settings.bgMusicUrl, 'audio'),
  playing: !isAdzanPlaying && hasInteracted,
  loop: true,
  volume: 0.4,
  width: "200px",
  height: "200px",
- config: { youtube: { playerVars: { origin: window.location.origin } } },
+ config: { 
+   youtube: { playerVars: { origin: window.location.origin } },
+   file: { forceAudio: true }
+ },
  onError: (e: any) => console.log('bgMusic error', e)
  } as any)}
  />
