@@ -19,6 +19,7 @@ function DigitalSignage() {
  const [loading, setLoading] = useState(true);
  const [error, setError] = useState<string | null>(null);
  const [isAdzanPlaying, setIsAdzanPlaying] = useState(false);
+ const [hasInteracted, setHasInteracted] = useState(false);
 
  // Auto-refresh slides periodically
  useEffect(() => {
@@ -133,6 +134,23 @@ function DigitalSignage() {
  <div className="w-full h-screen flex flex-col items-center justify-center bg-black">
  <p className="text-3xl text-red-500 font-bold mb-4">Gagal Memuat Konten</p>
  <p className="text-xl text-slate-400">{error || 'Tidak ada slide ditemukan'}</p>
+ </div>
+ );
+ }
+
+ if (!hasInteracted) {
+ return (
+ <div 
+ className="w-full h-screen flex flex-col items-center justify-center bg-slate-900 cursor-pointer"
+ onClick={() => setHasInteracted(true)}
+ >
+ <div className="text-center space-y-4">
+ <div className="w-24 h-24 bg-blue-500/20 rounded-full flex items-center justify-center mx-auto mb-8 animate-pulse text-blue-400">
+ <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+ </div>
+ <h1 className="text-4xl text-white font-bold tracking-wide">Mulai TV Informasi</h1>
+ <p className="text-xl text-slate-400">Ketuk layar di mana saja untuk mengaktifkan audio & video (kebijakan browser).</p>
+ </div>
  </div>
  );
  }

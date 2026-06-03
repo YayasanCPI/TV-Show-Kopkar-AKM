@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import ReactPlayer from 'react-player';
 
 interface Props {
@@ -11,6 +11,8 @@ interface Props {
 export default function VideoRenderer({ url, className = "", isFullScreenStyle = false, onEnded }: Props) {
   const isYouTube = url.includes('youtu.be') || url.includes('youtube.com');
   let videoSrc = url;
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const videoRef2 = useRef<HTMLVideoElement>(null);
   
   // Check if URL is Google Drive, change to direct download link
   const driveMatch = url.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
@@ -75,13 +77,27 @@ export default function VideoRenderer({ url, className = "", isFullScreenStyle =
     );
   }
 
+  const playResource = (ref: React.RefObject<HTMLVideoElement>) => {
+    if (ref.current) {
+      const p = ref.current.play();
+      if (p !== undefined) {
+        p.catch(e => console.log('Video autoplay interrupted:', e));
+      }
+    }
+  };
+
+  React.useEffect(() => {
+    playResource(videoRef);
+    playResource(videoRef2);
+  }, [videoSrc]);
+
   // Native Video for Google Drive & MP4s
   if (isFullScreenStyle) {
     return (
       <div className="relative w-full h-full overflow-hidden bg-black flex items-center justify-center">
         <video 
+          ref={videoRef}
           src={videoSrc} 
-          autoPlay 
           muted 
           playsInline 
           className="absolute w-full h-full object-cover"
@@ -94,8 +110,8 @@ export default function VideoRenderer({ url, className = "", isFullScreenStyle =
 
   return (
     <video 
+      ref={videoRef2}
       src={videoSrc} 
-      autoPlay 
       muted 
       playsInline 
       className={className}

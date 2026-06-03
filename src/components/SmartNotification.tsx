@@ -197,14 +197,20 @@ export default function SmartNotification() {
 
  useEffect(() => {
  if (notification?.active && !hasPlayed && audioRef.current) {
- audioRef.current.play().catch(e => console.log('Audio autoplay blocked, requires user interaction first', e));
+ const playPromise = audioRef.current.play();
+ if (playPromise !== undefined) {
+ playPromise.catch(e => console.log('Audio autoplay blocked, requires user interaction first', e));
+ }
  setHasPlayed(true);
  }
  }, [notification, hasPlayed]);
 
- if (!notification || !notification.active) return null;
+ 
 
  return (
+ <>
+ <audio ref={audioRef} src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" preload="auto" />
+ {notification && notification.active && (
  <div className="absolute inset-0 z-50 bg-slate-950 flex flex-col items-center justify-center p-12 overflow-hidden">
  {/* background glow */}
  <div className={`absolute inset-0 opacity-20 pointer-events-none  
@@ -293,8 +299,8 @@ export default function SmartNotification() {
  </div>
  )}
  </div>
- 
- <audio ref={audioRef} src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" preload="auto" />
  </div>
+ )}
+ </>
  );
 }
