@@ -75,7 +75,7 @@ export default function SlideCarousel({ slides }: SlideCarouselProps) {
  case 'contact':
  return <ContactSlide slide={slide} />;
  case 'flyer':
- return <FlyerSlide slide={slide} />;
+ return <FlyerSlide slide={slide} onVideoEnded={handleNext} />;
  case 'laporan':
  return <LaporanSlide slide={slide} />;
  case 'teladan':

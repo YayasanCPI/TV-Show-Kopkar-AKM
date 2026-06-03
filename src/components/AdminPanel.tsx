@@ -179,8 +179,7 @@ export default function AdminPanel() {
  id: newId,
  type: "flyer",
  title: "Slide Baru",
- subtitle: "Deskripsi Singkat",
- duration: 10000
+ subtitle: "Deskripsi Singkat"
  };
  setSlides([...slides, newSlide]);
  };

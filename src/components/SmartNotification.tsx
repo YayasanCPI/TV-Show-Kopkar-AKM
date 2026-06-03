@@ -165,6 +165,9 @@ export default function SmartNotification() {
  }
 
  setNotification(prev => {
+ if (currentNotif && prev && currentNotif.type === prev.type) return prev;
+ if (!currentNotif && !prev) return prev;
+
  // If type changed or it became active, reset hasPlayed to allow audio to play again
  if (currentNotif?.type !== prev?.type) {
  setHasPlayed(false);
