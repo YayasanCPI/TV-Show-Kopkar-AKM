@@ -19,11 +19,12 @@ import ContactSlide from './slides/ContactSlide';
 
 interface SlideCarouselProps {
  slides: Slide[];
+ onActiveSlideChange?: (slide: Slide) => void;
 }
 
 const AUTOPLAY_INTERVAL = 10000; // 10 seconds
 
-export default function SlideCarousel({ slides }: SlideCarouselProps) {
+export default function SlideCarousel({ slides, onActiveSlideChange }: SlideCarouselProps) {
  const [currentIndex, setCurrentIndex] = useState(0);
 
  const handleNext = () => {
@@ -44,6 +45,12 @@ export default function SlideCarousel({ slides }: SlideCarouselProps) {
 
  return () => clearInterval(timer);
  }, [currentIndex, slides]);
+
+ useEffect(() => {
+   if (slides.length > 0 && onActiveSlideChange) {
+     onActiveSlideChange(slides[currentIndex]);
+   }
+ }, [currentIndex, slides, onActiveSlideChange]);
 
  if (!slides.length) return null;
 

@@ -21,6 +21,7 @@ function DigitalSignage() {
  const [error, setError] = useState<string | null>(null);
  const [isAdzanPlaying, setIsAdzanPlaying] = useState(false);
  const [hasInteracted, setHasInteracted] = useState(false);
+ const [activeSlide, setActiveSlide] = useState<Slide | null>(null);
 
  // Auto-refresh slides periodically
  useEffect(() => {
@@ -156,6 +157,8 @@ function DigitalSignage() {
  );
  }
 
+ const isFullScreenSlide = activeSlide?.isFullScreen && (activeSlide?.imageUrl || activeSlide?.videoUrl);
+
  return (
  <div className="flex flex-col h-screen w-full bg-black overflow-hidden font-sans text-white relative">
  {/* Animated glowing orbs in the background */}
@@ -184,8 +187,8 @@ function DigitalSignage() {
  </div>
  )}
 
- <Header settings={settings} isMusicPlaying={settings.bgMusicEnabled && !!settings.bgMusicUrl && !isAdzanPlaying && hasInteracted} />
- {settings.widgetEnabled && (
+ {!isFullScreenSlide && <Header settings={settings} isMusicPlaying={settings.bgMusicEnabled && !!settings.bgMusicUrl && !isAdzanPlaying && hasInteracted} />}
+ {!isFullScreenSlide && settings.widgetEnabled && (
  <div className="h-12 bg-slate-900 border-b border-white/5 flex items-center shrink-0 px-12 z-40 overflow-hidden relative justify-between">
  <div className="flex items-center gap-3 flex-shrink-0">
  <span className="font-bold text-sm bg-blue-600/20 text-blue-400 px-3 py-1 rounded-md border border-blue-500/20 uppercase tracking-widest">
@@ -201,9 +204,9 @@ function DigitalSignage() {
  <div className="flex-1 relative w-full h-full overflow-hidden z-10">
  <SmartNotification />
  <AdzanAlert onAdzanStateChange={setIsAdzanPlaying} />
- <SlideCarousel slides={slides} />
+ <SlideCarousel slides={slides} onActiveSlideChange={setActiveSlide} />
  </div>
- <Marquee settings={settings} />
+ {!isFullScreenSlide && <Marquee settings={settings} />}
  </div>
  );
 }
