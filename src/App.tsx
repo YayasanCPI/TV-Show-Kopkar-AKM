@@ -157,7 +157,7 @@ function DigitalSignage() {
  );
  }
 
- const isFullScreenSlide = activeSlide?.isFullScreen && (activeSlide?.imageUrl || activeSlide?.videoUrl);
+ const isFullScreenSlide = activeSlide?.isFullScreen === true || String(activeSlide?.isFullScreen) === 'true' || String(activeSlide?.isFullScreen) === 'TRUE';
 
  return (
  <div className="flex flex-col h-screen w-full bg-black overflow-hidden font-sans text-white relative">

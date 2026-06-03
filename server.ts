@@ -134,32 +134,51 @@ async function startServer() {
     if (!id) return res.status(400).send('No id');
     
     try {
-      let url = `https://drive.usercontent.google.com/download?id=${id}&export=download`;
-      let response = await fetch(url);
-      
+      let initUrl = `https://drive.google.com/uc?export=download&id=${id}`;
+      // Use node-fetch style manually by fetching and keeping cookies if any
+      let response = await fetch(initUrl);      
       const contentType = response.headers.get('content-type') || '';
+      
+      // If it returned HTML, it's highly likely the virus warning page
       if (contentType.includes('text/html')) {
         const text = await response.text();
-        const uuidMatch = text.match(/name="uuid" value="([^"]+)"/);
         
-        if (uuidMatch && uuidMatch[1]) {
-          const confirmUrl = `${url}&confirm=t&uuid=${uuidMatch[1]}`;
-          response = await fetch(confirmUrl);
+        // Find the confirm token from the downloaded warning HTML
+        // It's usually something like confirm=abcd
+        const confirmMatch = text.match(/confirm=([a-zA-Z0-9_-]+)/);
+        
+        if (confirmMatch) {
+          const cookieHeader = response.headers.get('set-cookie');
+          
+          let fetchOpts: RequestInit = {};
+          if (cookieHeader) {
+            // Include cookie for session continuity required by Drive Download
+            let cookies = cookieHeader.split(',').map(c => c.split(';')[0]).join('; ');
+            fetchOpts.headers = { 'Cookie': cookies };
+          }
+          
+          // Re-fetch with the confirmation token
+          const confirmUrl = `https://drive.google.com/uc?export=download&id=${id}&confirm=${confirmMatch[1]}`;
+          response = await fetch(confirmUrl, fetchOpts);
         } else {
-           // fallback logic
-           response = await fetch(`https://drive.google.com/uc?export=download&id=${id}`);
+           // Retry with standard googleusercontent download just in case
+           let fallbackUrl = `https://drive.usercontent.google.com/download?id=${id}&export=download&confirm=t`;
+           response = await fetch(fallbackUrl);
         }
       }
       
-      // forward content-type
+      // Forward accurate headers
       const finalType = response.headers.get('content-type');
       if (finalType) {
         res.setHeader('Content-Type', finalType);
       }
+      
       const contentLength = response.headers.get('content-length');
-      if (contentLength) {
+      if (contentLength && contentLength !== '0') {
         res.setHeader('Content-Length', contentLength);
       }
+      
+      res.setHeader('Accept-Ranges', 'bytes');
       
       if (response.body) {
          // @ts-ignore
@@ -170,7 +189,7 @@ async function startServer() {
          res.send(Buffer.from(buffer));
       }
     } catch (e) {
-      console.error(e);
+      console.error('Error proxying media', e);
       res.status(500).send('Error proxying media');
     }
   });
