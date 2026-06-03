@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Slide, Settings } from '../types';
-import { Loader2, Save, Image as ImageIcon, Settings as SettingsIcon, CheckCircle, Video as VideoIcon, Bell } from 'lucide-react';
+import { Loader2, Save, Image as ImageIcon, Settings as SettingsIcon, CheckCircle, Video as VideoIcon, Bell, RefreshCw } from 'lucide-react';
 import { defaultSlides, defaultSettings } from '../defaultData';
 import SlideCarousel from './SlideCarousel';
 import { Eye } from 'lucide-react';
@@ -18,6 +18,7 @@ export default function AdminPanel() {
  }, []);
 
  const fetchData = async () => {
+ setLoading(true);
  try {
  const localSettings = localStorage.getItem('settings-fallback');
  let currentSettings = localSettings ? JSON.parse(localSettings) : defaultSettings;
@@ -218,6 +219,14 @@ export default function AdminPanel() {
  <CheckCircle size={18} /> {message}
  </span>
  )}
+ <button
+ onClick={fetchData}
+ disabled={loading}
+ className="bg-slate-200 hover:bg-slate-300 text-slate-700 px-4 py-3 rounded-xl font-bold flex items-center gap-2 transition-colors shadow-sm disabled:opacity-50"
+ >
+ <RefreshCw size={20} className={loading ? "animate-spin" : ""} />
+ <span className="hidden sm:inline">Refresh Data</span>
+ </button>
  <button
  onClick={handleSave}
  disabled={saving}
