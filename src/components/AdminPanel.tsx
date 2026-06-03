@@ -9,6 +9,7 @@ export default function AdminPanel() {
  const [slides, setSlides] = useState<Slide[]>([]);
  const [settings, setSettings] = useState<Settings>(defaultSettings);
   const [previewSlide, setPreviewSlide] = useState<Slide | null>(null);
+  const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
  const [loading, setLoading] = useState(true);
  const [saving, setSaving] = useState(false);
  const [message, setMessage] = useState('');
@@ -219,6 +220,13 @@ export default function AdminPanel() {
  <CheckCircle size={18} /> {message}
  </span>
  )}
+ <button
+ onClick={() => setIsPreviewModalOpen(true)}
+ className="bg-indigo-100 hover:bg-indigo-200 text-indigo-700 px-4 py-3 rounded-xl font-bold flex items-center gap-2 transition-colors shadow-sm disabled:opacity-50"
+ >
+ <Eye size={20} />
+ <span className="hidden sm:inline">Preview Slides</span>
+ </button>
  <button
  onClick={fetchData}
  disabled={loading}
@@ -559,6 +567,25 @@ export default function AdminPanel() {
  </div>
  </div>
  </div>
+ {isPreviewModalOpen && (
+   <div className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-12 bg-black/80 backdrop-blur-sm">
+     <div className="relative w-full h-full max-w-7xl max-h-[90vh] bg-black rounded-3xl overflow-hidden shadow-2xl flex border border-slate-700/50">
+       <button
+         onClick={() => setIsPreviewModalOpen(false)}
+         className="absolute top-4 right-4 z-50 bg-black/60 hover:bg-black/90 text-white w-10 h-10 rounded-full flex items-center justify-center transition-all border border-white/20 shadow-lg cursor-pointer"
+       >
+         <span className="font-bold">✕</span>
+       </button>
+       <div className="absolute top-4 left-4 z-50 px-3 py-1 bg-black/60 border-white/20 border backdrop-blur-md rounded-full text-white text-xs font-bold uppercase tracking-widest pointer-events-none">
+         Signage Preview Mode
+       </div>
+       
+       <div className="w-full h-full relative">
+         <SlideCarousel slides={slides} />
+       </div>
+     </div>
+   </div>
+ )}
  </div>
  );
 }
