@@ -12,6 +12,7 @@ import AdzanAlert from './components/AdzanAlert';
 import { defaultSlides, defaultSettings } from './defaultData';
 import { ErrorBoundary } from './ErrorBoundary';
 import ReactPlayer from 'react-player';
+import { formatMediaUrl } from './utils/formatMedia';
 
 function DigitalSignage() {
  const [slides, setSlides] = useState<Slide[]>([]);
@@ -167,7 +168,7 @@ function DigitalSignage() {
  <div className="absolute opacity-0 pointer-events-none w-10 h-10 overflow-hidden -z-50">
  <ReactPlayer
  {...({
- url: settings.bgMusicUrl,
+ url: formatMediaUrl(settings.bgMusicUrl),
  playing: !isAdzanPlaying && hasInteracted,
  loop: true,
  volume: 0.4,

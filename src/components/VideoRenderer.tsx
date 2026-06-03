@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import ReactPlayer from 'react-player';
+import { formatMediaUrl } from '../utils/formatMedia';
 
 interface Props {
   url: string;
@@ -10,15 +11,9 @@ interface Props {
 
 export default function VideoRenderer({ url, className = "", isFullScreenStyle = false, onEnded }: Props) {
   const isYouTube = url.includes('youtu.be') || url.includes('youtube.com');
-  let videoSrc = url;
+  const videoSrc = formatMediaUrl(url);
   const videoRef = useRef<HTMLVideoElement>(null);
   const videoRef2 = useRef<HTMLVideoElement>(null);
-  
-  // Check if URL is Google Drive, change to direct download link
-  const driveMatch = url.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
-  if (driveMatch) {
-    videoSrc = `https://drive.google.com/uc?export=download&id=${driveMatch[1]}`;
-  }
 
   const handleError = () => {
     if (onEnded) {

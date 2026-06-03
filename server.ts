@@ -2,6 +2,7 @@ import express from "express";
 import path from "path";
 import { createServer as createViteServer } from "vite";
 import fs from "fs";
+import { Readable } from "stream";
 
 // Slide Data File Path
 const DATA_FILE = path.join(process.cwd(), 'slideData.json');
@@ -124,6 +125,53 @@ async function startServer() {
         return res.json(absensiCache);
       }
       res.status(500).json({ error: 'Failed to fetch absensi' });
+    }
+  });
+
+  // API Route to bypass Google Drive virus scan
+  app.get('/api/proxy-media', async (req, res) => {
+    const id = req.query.id as string;
+    if (!id) return res.status(400).send('No id');
+    
+    try {
+      let url = `https://drive.usercontent.google.com/download?id=${id}&export=download`;
+      let response = await fetch(url);
+      
+      const contentType = response.headers.get('content-type') || '';
+      if (contentType.includes('text/html')) {
+        const text = await response.text();
+        const uuidMatch = text.match(/name="uuid" value="([^"]+)"/);
+        
+        if (uuidMatch && uuidMatch[1]) {
+          const confirmUrl = `${url}&confirm=t&uuid=${uuidMatch[1]}`;
+          response = await fetch(confirmUrl);
+        } else {
+           // fallback logic
+           response = await fetch(`https://drive.google.com/uc?export=download&id=${id}`);
+        }
+      }
+      
+      // forward content-type
+      const finalType = response.headers.get('content-type');
+      if (finalType) {
+        res.setHeader('Content-Type', finalType);
+      }
+      const contentLength = response.headers.get('content-length');
+      if (contentLength) {
+        res.setHeader('Content-Length', contentLength);
+      }
+      
+      if (response.body) {
+         // @ts-ignore
+         const nodeStream = Readable.fromWeb(response.body);
+         nodeStream.pipe(res);
+      } else {
+         const buffer = await response.arrayBuffer();
+         res.send(Buffer.from(buffer));
+      }
+    } catch (e) {
+      console.error(e);
+      res.status(500).send('Error proxying media');
     }
   });
 
