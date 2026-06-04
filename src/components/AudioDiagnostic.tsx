@@ -99,6 +99,7 @@ export default function AudioDiagnostic({ url }: AudioDiagnosticProps) {
                 url: formattedUrl,
                 playing: isPlaying,
                 volume: 0.2,
+                muted: false,
                 config: { 
                   youtube: { playerVars: { origin: window.location.origin } },
                   file: { forceAudio: true }

@@ -144,7 +144,18 @@ function DigitalSignage() {
  return (
  <div 
  className="w-full h-screen flex flex-col items-center justify-center bg-slate-900 cursor-pointer"
- onClick={() => setHasInteracted(true)}
+ onClick={() => {
+   setHasInteracted(true);
+   try {
+     const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
+     if (AudioContext) {
+       const audioCtx = new AudioContext();
+       if (audioCtx.state === 'suspended') {
+         audioCtx.resume();
+       }
+     }
+   } catch(e) { console.error('Audio setup error', e) }
+ }}
  >
  <div className="text-center space-y-4">
  <div className="w-24 h-24 bg-blue-500/20 rounded-full flex items-center justify-center mx-auto mb-8 animate-pulse text-blue-400">
@@ -175,6 +186,7 @@ function DigitalSignage() {
  playing: !isAdzanPlaying && hasInteracted,
  loop: true,
  volume: 0.4,
+ muted: false,
  width: "200px",
  height: "200px",
  config: { 
