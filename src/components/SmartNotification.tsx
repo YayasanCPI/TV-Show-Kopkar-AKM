@@ -26,8 +26,13 @@ export default function SmartNotification() {
  const fetchAbsensi = async () => {
  setIsFetchingAbsen(true);
  try {
- const API_ABSEN = 'https://script.google.com/macros/s/AKfycbz6YajqskEFxko5jVtpK8RS3oI-LUHbaLCUmgCFa-xHZIWSGrxJfB66ng0O0HqR4Arf-g/exec';
+ const API_ABSEN = '/api/absensi';
  const res = await fetch(API_ABSEN);
+ if (!res.ok) throw new Error(`HTTP error ${res.status}`);
+ const contentType = res.headers.get('content-type');
+ if (contentType && contentType.includes('text/html')) {
+     throw new Error('Received HTML. Endpoint requires auth or is broken.');
+ }
  const data = await res.json();
  
  const targetDate = new Date();

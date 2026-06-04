@@ -21,6 +21,13 @@ export default function AbsensiWidget() {
       const API_ABSEN = '/api/absensi';
       const res = await fetch(API_ABSEN);
       if (!res.ok) throw new Error(`HTTP error ${res.status}`);
+      
+      const contentLength = res.headers.get('content-length');
+      const contentType = res.headers.get('content-type');
+      if (contentType && contentType.includes('text/html')) {
+          throw new Error('Received HTML instead of JSON. Server proxy might not be ready or remote auth required.');
+      }
+
       const data = await res.json();
       
       const targetDate = new Date();

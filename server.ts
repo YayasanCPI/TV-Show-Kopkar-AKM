@@ -143,28 +143,26 @@ async function startServer() {
       if (contentType.includes('text/html')) {
         const text = await response.text();
         
-        // Find the confirm token from the downloaded warning HTML
-        // It's usually something like confirm=abcd
-        const confirmMatch = text.match(/confirm=([a-zA-Z0-9_-]+)/);
+        let confirmToken = 't';
+        let uuidToken = '';
         
-        if (confirmMatch) {
-          const cookieHeader = response.headers.get('set-cookie');
-          
-          let fetchOpts: RequestInit = {};
-          if (cookieHeader) {
-            // Include cookie for session continuity required by Drive Download
-            let cookies = cookieHeader.split(',').map(c => c.split(';')[0]).join('; ');
-            fetchOpts.headers = { 'Cookie': cookies };
-          }
-          
-          // Re-fetch with the confirmation token
-          const confirmUrl = `https://drive.google.com/uc?export=download&id=${id}&confirm=${confirmMatch[1]}`;
-          response = await fetch(confirmUrl, fetchOpts);
-        } else {
-           // Retry with standard googleusercontent download just in case
-           let fallbackUrl = `https://drive.usercontent.google.com/download?id=${id}&export=download&confirm=t`;
-           response = await fetch(fallbackUrl);
+        const confirmMatch = text.match(/confirm=([a-zA-Z0-9_-]+)/);
+        if (confirmMatch) confirmToken = confirmMatch[1];
+        
+        const uuidMatch = text.match(/name="uuid"\s+value="([^"]+)"/i);
+        if (uuidMatch) uuidToken = uuidMatch[1];
+
+        const cookieHeader = response.headers.get('set-cookie');
+        let fetchOpts: RequestInit = {};
+        if (cookieHeader) {
+          let cookies = cookieHeader.split(',').map(c => c.split(';')[0]).join('; ');
+          fetchOpts.headers = { 'Cookie': cookies };
         }
+        
+        let confirmUrl = `https://drive.google.com/uc?export=download&id=${id}&confirm=${confirmToken}`;
+        if (uuidToken) confirmUrl += `&uuid=${uuidToken}`;
+        
+        response = await fetch(confirmUrl, fetchOpts);
       }
       
       // Forward accurate headers
