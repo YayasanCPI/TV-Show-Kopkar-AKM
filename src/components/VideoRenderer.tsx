@@ -72,20 +72,6 @@ export default function VideoRenderer({ url, className = "", isFullScreenStyle =
     );
   }
 
-  const playResource = (ref: React.RefObject<HTMLVideoElement>) => {
-    if (ref.current) {
-      const p = ref.current.play();
-      if (p !== undefined) {
-        p.catch(e => console.log('Video autoplay interrupted:', e));
-      }
-    }
-  };
-
-  React.useEffect(() => {
-    playResource(videoRef);
-    playResource(videoRef2);
-  }, [videoSrc]);
-
   // Native Video for Google Drive & MP4s
   if (isFullScreenStyle) {
     return (
@@ -94,7 +80,8 @@ export default function VideoRenderer({ url, className = "", isFullScreenStyle =
           ref={videoRef}
           src={videoSrc} 
           muted 
-          playsInline 
+          playsInline
+          autoPlay
           className="absolute w-full h-full object-cover"
           onEnded={onEnded}
           onError={handleError}
@@ -108,7 +95,8 @@ export default function VideoRenderer({ url, className = "", isFullScreenStyle =
       ref={videoRef2}
       src={videoSrc} 
       muted 
-      playsInline 
+      playsInline
+      autoPlay
       className={className}
       onEnded={onEnded}
       onError={handleError}
