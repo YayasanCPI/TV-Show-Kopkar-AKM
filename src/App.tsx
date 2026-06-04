@@ -179,7 +179,7 @@ function DigitalSignage() {
  
  {/* Background Music Player */}
  {settings.bgMusicEnabled && settings.bgMusicUrl && (
- <div className="absolute opacity-0 pointer-events-none w-10 h-10 overflow-hidden -z-50">
+ <div className="absolute top-0 left-0 w-[400px] h-[300px] opacity-[0.001] pointer-events-none z-0">
  <ReactPlayer
  {...({
  url: formatMediaUrl(settings.bgMusicUrl, 'audio'),
@@ -187,8 +187,8 @@ function DigitalSignage() {
  loop: true,
  volume: 0.4,
  muted: false,
- width: "200px",
- height: "200px",
+ width: "100%",
+ height: "100%",
  config: { 
    youtube: { playerVars: { origin: window.location.origin } },
    file: { forceAudio: true }

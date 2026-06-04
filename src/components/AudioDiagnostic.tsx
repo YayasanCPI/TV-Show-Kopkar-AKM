@@ -93,13 +93,15 @@ export default function AudioDiagnostic({ url }: AudioDiagnosticProps) {
       </div>
 
       {url && (
-         <div className="absolute opacity-0 pointer-events-none w-0 h-0 overflow-hidden">
+         <div className="absolute top-0 left-0 w-[400px] h-[300px] pointer-events-none opacity-[0.001] z-0 overflow-hidden">
            <ReactPlayer
               {...({
                 url: formattedUrl,
                 playing: isPlaying,
                 volume: 0.2,
                 muted: false,
+                width: "100%",
+                height: "100%",
                 config: { 
                   youtube: { playerVars: { origin: window.location.origin } },
                   file: { forceAudio: true }
