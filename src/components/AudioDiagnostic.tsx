@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import ReactPlayer from 'react-player';
 import { formatMediaUrl } from '../utils/formatMedia';
 import { AlertCircle, CheckCircle2, Loader2, PlayCircle, StopCircle, RefreshCcw, Activity } from 'lucide-react';
@@ -13,6 +13,34 @@ export default function AudioDiagnostic({ url }: AudioDiagnosticProps) {
   const [errorDetails, setErrorDetails] = useState<any>(null);
   const [bufferState, setBufferState] = useState<boolean>(false);
   const [logs, setLogs] = useState<{ time: string, msg: string }[]>([]);
+  const audioRef = useRef<HTMLAudioElement>(null);
+
+  useEffect(() => {
+    if (audioRef.current) {
+        audioRef.current.volume = 0.2;
+        audioRef.current.onplaying = () => { setStatus('playing'); addLog('State: Playing'); };
+        audioRef.current.onpause = () => { setStatus('paused'); addLog('State: Paused'); };
+        audioRef.current.onwaiting = () => { setBufferState(true); addLog('Buffering started'); };
+        audioRef.current.oncanplay = () => { setStatus('ready'); addLog('Player Ready'); setBufferState(false); };
+        audioRef.current.onerror = () => { 
+           setStatus('error'); 
+           setErrorDetails('HTML5 Audio playback error'); 
+           addLog(`Error encountered: Audio format not supported or network error.`);
+        };
+
+        if (isPlaying) {
+            const p = audioRef.current.play();
+            if (p !== undefined) {
+                p.then(() => { setStatus('started'); addLog('Playback Started'); }).catch(e => {
+                    setStatus('error');
+                    addLog(`Autoplay blocked or network error: ${e.message}`);
+                });
+            }
+        } else {
+            audioRef.current.pause();
+        }
+    }
+  }, [isPlaying]);
 
   const formattedUrl = formatMediaUrl(url, 'audio');
 
@@ -124,32 +152,7 @@ export default function AudioDiagnostic({ url }: AudioDiagnosticProps) {
                src={formattedUrl}
                muted={false}
                className="w-full"
-               ref={(el) => {
-                 if (el) {
-                   el.volume = 0.2;
-                   el.onplaying = () => { setStatus('playing'); addLog('State: Playing'); };
-                   el.onpause = () => { setStatus('paused'); addLog('State: Paused'); };
-                   el.onwaiting = () => { setBufferState(true); addLog('Buffering started'); };
-                   el.oncanplay = () => { setStatus('ready'); addLog('Player Ready'); setBufferState(false); };
-                   el.onerror = () => { 
-                      setStatus('error'); 
-                      setErrorDetails('HTML5 Audio playback error'); 
-                      addLog(`Error encountered: Audio format not supported or network error.`);
-                   };
-                   
-                   if (isPlaying) {
-                     const p = el.play();
-                     if (p !== undefined) {
-                       p.then(() => { setStatus('started'); addLog('Playback Started'); }).catch(e => {
-                         setStatus('error');
-                         addLog(`Autoplay blocked or network error: ${e.message}`);
-                       });
-                     }
-                   } else {
-                     el.pause();
-                   }
-                 }
-               }}
+               ref={audioRef}
              />
            )}
          </div>

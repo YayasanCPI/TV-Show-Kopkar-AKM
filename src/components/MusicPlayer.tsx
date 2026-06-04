@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import ReactPlayer from 'react-player';
 import { Settings } from '../types';
 import { defaultSettings } from '../defaultData';
@@ -7,6 +7,20 @@ import { formatMediaUrl } from '../utils/formatMedia';
 export function MusicPlayer() {
   const [settings, setSettings] = useState<Settings>(defaultSettings);
   const [playing, setPlaying] = useState(false);
+  const audioRef = useRef<HTMLAudioElement>(null);
+
+  useEffect(() => {
+    if (audioRef.current) {
+        if (playing) {
+            const playPromise = audioRef.current.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(e => console.log('play error', e));
+            }
+        } else {
+            audioRef.current.pause();
+        }
+    }
+  }, [playing]);
 
   useEffect(() => {
     const fetchSettings = async () => {
@@ -98,13 +112,6 @@ export function MusicPlayer() {
                       onError: (e: any) => console.log('Player Error:', e)
                     } as any)}
                   />
-                  {/* Overlay to block iframe capturing clicks if needed, but controls=true means user should click iframe */}
-                  {!playing && (
-                    <div 
-                      className="absolute inset-0 bg-transparent cursor-pointer" 
-                      onClick={() => setPlaying(true)}
-                    />
-                  )}
                 </div>
               ) : (
                 <audio
@@ -112,18 +119,7 @@ export function MusicPlayer() {
                   controls={true}
                   className="w-full"
                   style={{ borderRadius: '0.5rem' }}
-                  ref={(el) => {
-                    if (el) {
-                      if (playing) {
-                         const playPromise = el.play();
-                         if (playPromise !== undefined) {
-                            playPromise.catch(e => console.log('play error', e));
-                         }
-                      } else {
-                         el.pause();
-                      }
-                    }
-                  }}
+                  ref={audioRef}
                   onPlay={() => setPlaying(true)}
                   onPause={() => setPlaying(false)}
                 />

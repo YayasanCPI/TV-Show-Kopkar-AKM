@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { HashRouter, Routes, Route } from 'react-router-dom';
 import SlideCarousel from './components/SlideCarousel';
 import { Slide, Settings } from './types';
@@ -23,6 +23,21 @@ function DigitalSignage() {
  const [isAdzanPlaying, setIsAdzanPlaying] = useState(false);
  const [hasInteracted, setHasInteracted] = useState(false);
  const [activeSlide, setActiveSlide] = useState<Slide | null>(null);
+ const audioRef = useRef<HTMLAudioElement>(null);
+
+ useEffect(() => {
+   if (audioRef.current) {
+     audioRef.current.volume = 0.4;
+     if (!isAdzanPlaying && hasInteracted && settings.bgMusicEnabled && settings.bgMusicUrl && !settings.bgMusicUrl.includes('youtube.com') && !settings.bgMusicUrl.includes('youtu.be')) {
+       const playPromise = audioRef.current.play();
+       if (playPromise !== undefined) {
+         playPromise.catch(error => console.log('Audio autoplay prevented in background', error));
+       }
+     } else {
+       audioRef.current.pause();
+     }
+   }
+ }, [isAdzanPlaying, hasInteracted, settings.bgMusicEnabled, settings.bgMusicUrl]);
 
  // Auto-refresh slides periodically
  useEffect(() => {
@@ -198,25 +213,9 @@ function DigitalSignage() {
   ) : (
     <audio
       src={formatMediaUrl(settings.bgMusicUrl, 'audio')}
-      autoPlay={!isAdzanPlaying && hasInteracted}
       loop={true}
       muted={false}
-      ref={(el) => {
-        if (el) {
-          el.volume = 0.4;
-          if (!isAdzanPlaying && hasInteracted) {
-             const playPromise = el.play();
-             if (playPromise !== undefined) {
-                 playPromise.catch(error => {
-                     // Auto-play was prevented
-                     console.log('Audio autoplay prevented in background', error);
-                 });
-             }
-          } else {
-             el.pause();
-          }
-        }
-      }}
+      ref={audioRef}
     />
   )}
  </div>

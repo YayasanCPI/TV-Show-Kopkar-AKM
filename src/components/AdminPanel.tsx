@@ -330,7 +330,7 @@ export default function AdminPanel() {
  className="w-full border border-slate-300 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-slate-200 disabled:text-slate-400"
  />
  <button 
-   onClick={() => updateSettings('bgMusicUrl', 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/WFMU/Broke_For_Free/Directionless_EP/Broke_For_Free_-_01_-_Night_Owl.mp3')}
+   onClick={() => updateSettings('bgMusicUrl', 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3')}
    type="button"
    disabled={!settings.bgMusicEnabled}
    className="self-start text-xs bg-emerald-100/80 hover:bg-emerald-200 text-emerald-800 px-3 py-2 rounded border border-emerald-300 font-medium transition-colors disabled:opacity-50"
