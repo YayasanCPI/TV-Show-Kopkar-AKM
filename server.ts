@@ -120,7 +120,7 @@ async function startServer() {
       lastAbsensiFetch = now;
       res.json(data);
     } catch (error) {
-      console.error('Proxy Absensi Error:', error);
+      // console.warn('Proxy Absensi fetch failed, using cache if available');
       if (absensiCache) {
         return res.json(absensiCache);
       }

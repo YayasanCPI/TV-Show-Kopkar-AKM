@@ -13,8 +13,8 @@ export const defaultSettings: Settings = {
  widgetTitle: "INFO PENTING",
  widgetText: "Jam Layanan: Senin - Jumat (08:00 - 16:00) | Update Saldo setiap akhir bulan.",
  appsScriptUrl: "https://script.google.com/macros/s/AKfycbwLh5aJs0QsayYfm9TlAnbi1U2S5Zj1alY8euKhTp3N5kYq59Q62Wq5iHR6-peOIURggw/exec",
- bgMusicEnabled: false,
- bgMusicUrl: ""
+ bgMusicEnabled: true,
+ bgMusicUrl: "https://files.freemusicarchive.org/storage-freemusicarchive-org/music/WFMU/Broke_For_Free/Directionless_EP/Broke_For_Free_-_01_-_Night_Owl.mp3"
 };
 
 export const defaultSlides: Slide[] = [

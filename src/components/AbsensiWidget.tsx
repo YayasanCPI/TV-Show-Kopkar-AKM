@@ -114,9 +114,7 @@ export default function AbsensiWidget() {
 
     } catch (error: any) {
       // Silently ignore network errors during dev server restarts
-      if (error?.message !== 'Failed to fetch') {
-        console.error('Error fetching absensi for widget', error);
-      }
+      // console.warn('Absensi fetch skipped or failing:', error);
     }
   };
 

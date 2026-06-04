@@ -117,7 +117,7 @@ export default function SmartNotification() {
  setHadirList(masukData);
  setPulangList(pulangData);
  } catch (error) {
- console.error('Error fetching absensi', error);
+ // console.warn('Absensi fetch failed:', error);
  } finally {
  setIsFetchingAbsen(false);
  }
