@@ -128,18 +128,28 @@ async function startServer() {
     }
   });
 
-  // API Route to bypass Google Drive virus scan
+  // API Route to bypass Google Drive virus scan and resolve direct stream URL
   app.get('/api/proxy-media', async (req, res) => {
     const id = req.query.id as string;
     if (!id) return res.status(400).send('No id');
     
     try {
       let initUrl = `https://drive.google.com/uc?export=download&id=${id}`;
-      // Use node-fetch style manually by fetching and keeping cookies if any
-      let response = await fetch(initUrl);      
+      
+      // Request without following redirects to see if Drive gives us a direct url immediately
+      let response = await fetch(initUrl, { redirect: 'manual' });
+      
+      // If Drive redirects immediately (small files), it goes to googleusercontent
+      if (response.status >= 300 && response.status < 400) {
+        const location = response.headers.get('location');
+        if (location) {
+          return res.redirect(302, location);
+        }
+      }
+      
       const contentType = response.headers.get('content-type') || '';
       
-      // If it returned HTML, it's highly likely the virus warning page
+      // If it returned HTML, it is likely the virus warning page
       if (contentType.includes('text/html')) {
         const text = await response.text();
         
@@ -153,28 +163,40 @@ async function startServer() {
         if (uuidMatch) uuidToken = uuidMatch[1];
 
         const cookieHeader = response.headers.get('set-cookie');
-        let fetchOpts: RequestInit = {};
+        let reqHeaders: Record<string, string> = {};
         if (cookieHeader) {
           let cookies = cookieHeader.split(',').map(c => c.split(';')[0]).join('; ');
-          fetchOpts.headers = { 'Cookie': cookies };
+          reqHeaders['Cookie'] = cookies;
         }
         
         let confirmUrl = `https://drive.google.com/uc?export=download&id=${id}&confirm=${confirmToken}`;
         if (uuidToken) confirmUrl += `&uuid=${uuidToken}`;
         
-        response = await fetch(confirmUrl, fetchOpts);
+        // Fetch the confirm url WITHOUT following redirects to capture the final download link
+        const confirmRes = await fetch(confirmUrl, { 
+           headers: reqHeaders,
+           redirect: 'manual' 
+        });
+        
+        if (confirmRes.status >= 300 && confirmRes.status < 400) {
+           const finalLocation = confirmRes.headers.get('location');
+           if (finalLocation) {
+              return res.redirect(302, finalLocation);
+           }
+        }
+        
+        // Fallback: if it didn't redirect, maybe it's returning the file directly now
+        // But usually it redirects.
+        return res.redirect(302, confirmUrl);
       }
       
-      // Forward accurate headers
+      // If it wasn't HTML and wasn't a redirect, it might be the file directly (rare for Drive unless using API)
+      res.status(response.status);
       const finalType = response.headers.get('content-type');
-      if (finalType) {
-        res.setHeader('Content-Type', finalType);
-      }
-      
+      if (finalType) res.setHeader('Content-Type', finalType);
+
       const contentLength = response.headers.get('content-length');
-      if (contentLength && contentLength !== '0') {
-        res.setHeader('Content-Length', contentLength);
-      }
+      if (contentLength && contentLength !== '0') res.setHeader('Content-Length', contentLength);
       
       res.setHeader('Accept-Ranges', 'bytes');
       
@@ -186,9 +208,12 @@ async function startServer() {
          const buffer = await response.arrayBuffer();
          res.send(Buffer.from(buffer));
       }
+      
     } catch (e) {
       console.error('Error proxying media', e);
-      res.status(500).send('Error proxying media');
+      if (!res.headersSent) {
+        res.status(500).send('Error proxying media');
+      }
     }
   });
 
