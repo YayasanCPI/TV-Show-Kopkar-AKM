@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import ReactPlayer from 'react-player';
 import { Settings } from '../types';
 import { defaultSettings } from '../defaultData';
 import { formatMediaUrl } from '../utils/formatMedia';
@@ -7,7 +6,11 @@ import { formatMediaUrl } from '../utils/formatMedia';
 export function MusicPlayer() {
   const [settings, setSettings] = useState<Settings>(defaultSettings);
   const [playing, setPlaying] = useState(false);
+  const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
   const audioRef = useRef<HTMLAudioElement>(null);
+
+  const playlist = (settings.bgMusicUrl || '').split('\n').map(u => u.trim()).filter(u => u.length > 0);
+  const currentTrackUrl = playlist.length > 0 ? playlist[currentTrackIndex % playlist.length] : '';
 
   useEffect(() => {
     if (audioRef.current) {
@@ -20,7 +23,7 @@ export function MusicPlayer() {
             audioRef.current.pause();
         }
     }
-  }, [playing]);
+  }, [playing, currentTrackUrl]);
 
   useEffect(() => {
     const fetchSettings = async () => {
@@ -46,9 +49,6 @@ export function MusicPlayer() {
     };
     fetchSettings();
   }, []);
-
-  const bgMusicUrl = settings.bgMusicUrl || defaultSettings.bgMusicUrl;
-  const isYoutube = bgMusicUrl?.includes('youtube.com') || bgMusicUrl?.includes('youtu.be');
 
   return (
     <div className="min-h-screen bg-slate-900 text-white flex flex-col items-center justify-center p-8">
@@ -93,37 +93,34 @@ export function MusicPlayer() {
 
         <div className="bg-slate-900 p-6 border-t border-slate-700">
           <div className="text-xs text-slate-500 font-mono break-all line-clamp-2">
-            URL: {bgMusicUrl}
+            URL {currentTrackIndex + 1}/{playlist.length}: {currentTrackUrl || 'Belum ada musik'}
           </div>
-          <div className="mt-4">
-            {bgMusicUrl && (
-              isYoutube ? (
-                 <div style={{ position: 'relative', width: '100%', height: '250px', borderRadius: '0.5rem', overflow: 'hidden', pointerEvents: 'auto' }}>
-                  <ReactPlayer
-                    {...({
-                      url: bgMusicUrl,
-                      playing: playing,
-                      loop: true,
-                      volume: 1.0,
-                      controls: true,
-                      width: "100%",
-                      height: "100%",
-                      config: { youtube: { playerVars: { origin: window.location.origin } } } as any,
-                      onError: (e: any) => console.log('Player Error:', e)
-                    } as any)}
-                  />
-                </div>
-              ) : (
+          <div className="mt-4 flex gap-2">
+            {currentTrackUrl && (
                 <audio
-                  src={formatMediaUrl(bgMusicUrl, 'audio')}
+                  src={formatMediaUrl(currentTrackUrl, 'audio')}
                   controls={true}
                   className="w-full"
                   style={{ borderRadius: '0.5rem' }}
                   ref={audioRef}
                   onPlay={() => setPlaying(true)}
                   onPause={() => setPlaying(false)}
+                  onEnded={() => {
+                    if (playlist.length > 1) {
+                      setCurrentTrackIndex(prev => prev + 1);
+                    }
+                  }}
+                  loop={playlist.length === 1}
                 />
-              )
+            )}
+            {playlist.length > 1 && (
+              <button 
+                onClick={() => setCurrentTrackIndex(prev => prev + 1)}
+                className="bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded-lg px-4 flex-shrink-0 transition-colors"
+                title="Next Track"
+              >
+                ⏭️
+              </button>
             )}
           </div>
         </div>

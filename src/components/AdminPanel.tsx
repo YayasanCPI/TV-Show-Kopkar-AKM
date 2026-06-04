@@ -319,27 +319,27 @@ export default function AdminPanel() {
  </div>
  <div className="space-y-4">
  <div>
- <label className="block text-sm font-medium text-slate-700 mb-1">URL YouTube / Musik Audio</label>
+ <label className="block text-sm font-medium text-slate-700 mb-1">Daftar Playlist MP3 (Satu URL per baris)</label>
  <div className="flex flex-col gap-2">
- <input
- type="text"
+ <textarea
+ rows={4}
  value={settings.bgMusicUrl || ''}
  onChange={(e) => updateSettings('bgMusicUrl', e.target.value)}
  disabled={!settings.bgMusicEnabled}
- placeholder="Contoh: https://www.youtube.com/watch?v=..."
- className="w-full border border-slate-300 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-slate-200 disabled:text-slate-400"
+ placeholder="Contoh: https://www.soundhelix.com/...mp3&#10;https://www.soundhelix.com/...mp3"
+ className="w-full border border-slate-300 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-slate-200 disabled:text-slate-400 text-sm whitespace-pre-wrap"
  />
  <button 
-   onClick={() => updateSettings('bgMusicUrl', 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3')}
+   onClick={() => updateSettings('bgMusicUrl', "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3\nhttps://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3\nhttps://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3")}
    type="button"
    disabled={!settings.bgMusicEnabled}
    className="self-start text-xs bg-emerald-100/80 hover:bg-emerald-200 text-emerald-800 px-3 py-2 rounded border border-emerald-300 font-medium transition-colors disabled:opacity-50"
  >
-   🎵 Klik Disini Untuk Mencoba Pakai MP3 Default
+   🎵 Klik Disini Untuk Set Playlist MP3 Default
  </button>
  </div>
  <p className="text-xs text-orange-600 mt-2 p-2 bg-orange-100 rounded">
- 💡 <b>Catatan:</b> Kebijakan Auto-play browser mengharuskan interaksi jika ingin memutar musik. Klik salah satu tempat di layar smart TV Anda 1 kali setelah memuat web agar suara bisa hidup (jika tidak kedengaran).
+ 💡 <b>Catatan:</b> Kebijakan Auto-play browser mengharuskan interaksi jika ingin memutar musik. Klik salah satu tempat di layar smart TV Anda 1 kali setelah memuat web agar suara bisa hidup.
  </p>
  {settings.bgMusicEnabled && settings.bgMusicUrl && (
    <div className="mt-4 space-y-4">

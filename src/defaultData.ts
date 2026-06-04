@@ -14,7 +14,7 @@ export const defaultSettings: Settings = {
  widgetText: "Jam Layanan: Senin - Jumat (08:00 - 16:00) | Update Saldo setiap akhir bulan.",
  appsScriptUrl: "https://script.google.com/macros/s/AKfycbwLh5aJs0QsayYfm9TlAnbi1U2S5Zj1alY8euKhTp3N5kYq59Q62Wq5iHR6-peOIURggw/exec",
  bgMusicEnabled: true,
- bgMusicUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
+ bgMusicUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3\nhttps://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3\nhttps://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3\nhttps://www.soundhelix.com/examples/mp3/SoundHelix-Song-13.mp3\nhttps://www.soundhelix.com/examples/mp3/SoundHelix-Song-15.mp3"
 };
 
 export const defaultSlides: Slide[] = [

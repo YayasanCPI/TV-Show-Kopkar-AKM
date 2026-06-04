@@ -12,7 +12,6 @@ import AbsensiWidget from './components/AbsensiWidget';
 import AdzanAlert from './components/AdzanAlert';
 import { defaultSlides, defaultSettings } from './defaultData';
 import { ErrorBoundary } from './ErrorBoundary';
-import ReactPlayer from 'react-player';
 import { formatMediaUrl } from './utils/formatMedia';
 
 function DigitalSignage() {
@@ -23,12 +22,17 @@ function DigitalSignage() {
  const [isAdzanPlaying, setIsAdzanPlaying] = useState(false);
  const [hasInteracted, setHasInteracted] = useState(false);
  const [activeSlide, setActiveSlide] = useState<Slide | null>(null);
+ const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
  const audioRef = useRef<HTMLAudioElement>(null);
+
+ // Generate playlist array
+ const playlist = (settings.bgMusicUrl || '').split('\n').map(u => u.trim()).filter(u => u.length > 0);
+ const currentTrackUrl = playlist.length > 0 ? playlist[currentTrackIndex % playlist.length] : '';
 
  useEffect(() => {
    if (audioRef.current) {
      audioRef.current.volume = 0.4;
-     if (!isAdzanPlaying && hasInteracted && settings.bgMusicEnabled && settings.bgMusicUrl && !settings.bgMusicUrl.includes('youtube.com') && !settings.bgMusicUrl.includes('youtu.be')) {
+     if (!isAdzanPlaying && hasInteracted && settings.bgMusicEnabled && currentTrackUrl) {
        const playPromise = audioRef.current.play();
        if (playPromise !== undefined) {
          playPromise.catch(error => console.log('Audio autoplay prevented in background', error));
@@ -37,7 +41,7 @@ function DigitalSignage() {
        audioRef.current.pause();
      }
    }
- }, [isAdzanPlaying, hasInteracted, settings.bgMusicEnabled, settings.bgMusicUrl]);
+ }, [isAdzanPlaying, hasInteracted, settings.bgMusicEnabled, currentTrackUrl]);
 
  // Auto-refresh slides periodically
  useEffect(() => {
@@ -194,30 +198,15 @@ function DigitalSignage() {
  <div className="absolute top-[40%] left-[30%] w-[30%] h-[30%] bg-[radial-gradient(circle,rgba(49,46,129,0.2)_0%,transparent_70%)] rounded-full pointer-events-none "></div>
  
  {/* Background Music Player */}
- {settings.bgMusicEnabled && settings.bgMusicUrl && (
+ {settings.bgMusicEnabled && currentTrackUrl && (
  <div className="absolute top-0 left-0 w-[400px] h-[300px] opacity-[0.001] pointer-events-none z-0">
-  {(settings.bgMusicUrl.includes('youtube.com') || settings.bgMusicUrl.includes('youtu.be')) ? (
-    <ReactPlayer
-      {...({
-        url: settings.bgMusicUrl,
-        playing: !isAdzanPlaying && hasInteracted,
-        loop: true,
-        volume: 0.4,
-        muted: false,
-        width: "100%",
-        height: "100%",
-        config: { youtube: { playerVars: { origin: window.location.origin } } } as any,
-        onError: (e: any) => console.log('bgMusic error', e)
-      } as any)}
-    />
-  ) : (
     <audio
-      src={formatMediaUrl(settings.bgMusicUrl, 'audio')}
-      loop={true}
+      src={formatMediaUrl(currentTrackUrl, 'audio')}
+      loop={playlist.length === 1}
       muted={false}
       ref={audioRef}
+      onEnded={() => setCurrentTrackIndex(prev => prev + 1)}
     />
-  )}
  </div>
  )}
 
