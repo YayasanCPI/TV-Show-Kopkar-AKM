@@ -90,8 +90,8 @@ export function MusicPlayer() {
                 volume={1.0}
                 controls={true} // Tampilkan kontrol selalu
                 width="100%"
-                height={isYoutube ? "100px" : "50px"}
-                style={{ borderRadius: '0.5rem', overflow: 'hidden' }}
+                height={isYoutube ? "250px" : "50px"}
+                style={{ borderRadius: '0.5rem', overflow: 'hidden', pointerEvents: 'auto' }}
                 config={{ 
                   youtube: { playerVars: { origin: window.location.origin } },
                   file: { forceAudio: true }
