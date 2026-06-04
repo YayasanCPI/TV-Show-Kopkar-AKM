@@ -181,22 +181,44 @@ function DigitalSignage() {
  {/* Background Music Player */}
  {settings.bgMusicEnabled && settings.bgMusicUrl && (
  <div className="absolute top-0 left-0 w-[400px] h-[300px] opacity-[0.001] pointer-events-none z-0">
- <ReactPlayer
- {...({
- url: formatMediaUrl(settings.bgMusicUrl, 'audio'),
- playing: !isAdzanPlaying && hasInteracted,
- loop: true,
- volume: 0.4,
- muted: false,
- width: "100%",
- height: "100%",
- config: { 
-   youtube: { playerVars: { origin: window.location.origin } },
-   file: { forceAudio: true }
- },
- onError: (e: any) => console.log('bgMusic error', e)
- } as any)}
- />
+  {(settings.bgMusicUrl.includes('youtube.com') || settings.bgMusicUrl.includes('youtu.be')) ? (
+    <ReactPlayer
+      {...({
+        url: settings.bgMusicUrl,
+        playing: !isAdzanPlaying && hasInteracted,
+        loop: true,
+        volume: 0.4,
+        muted: false,
+        width: "100%",
+        height: "100%",
+        config: { youtube: { playerVars: { origin: window.location.origin } } } as any,
+        onError: (e: any) => console.log('bgMusic error', e)
+      } as any)}
+    />
+  ) : (
+    <audio
+      src={formatMediaUrl(settings.bgMusicUrl, 'audio')}
+      autoPlay={!isAdzanPlaying && hasInteracted}
+      loop={true}
+      muted={false}
+      ref={(el) => {
+        if (el) {
+          el.volume = 0.4;
+          if (!isAdzanPlaying && hasInteracted) {
+             const playPromise = el.play();
+             if (playPromise !== undefined) {
+                 playPromise.catch(error => {
+                     // Auto-play was prevented
+                     console.log('Audio autoplay prevented in background', error);
+                 });
+             }
+          } else {
+             el.pause();
+          }
+        }
+      }}
+    />
+  )}
  </div>
  )}
 

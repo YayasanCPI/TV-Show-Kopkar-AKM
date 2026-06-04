@@ -94,34 +94,64 @@ export default function AudioDiagnostic({ url }: AudioDiagnosticProps) {
 
       {url && (
          <div className="absolute top-0 left-0 w-[400px] h-[300px] pointer-events-none opacity-[0.001] z-0 overflow-hidden">
-           <ReactPlayer
-              {...({
-                url: formattedUrl,
-                playing: isPlaying,
-                volume: 0.2,
-                muted: false,
-                width: "100%",
-                height: "100%",
-                config: { 
-                  youtube: { playerVars: { origin: window.location.origin } },
-                  file: { forceAudio: true }
-                },
-                onReady: () => { setStatus('ready'); addLog('Player Ready'); },
-                onStart: () => { setStatus('started'); addLog('Playback Started'); },
-                onPlay: () => { setStatus('playing'); addLog('State: Playing'); },
-                onPause: () => { setStatus('paused'); addLog('State: Paused'); },
-                onBuffer: () => { setBufferState(true); addLog('Buffering started'); },
-                onBufferEnd: () => { setBufferState(false); addLog('Buffering ended'); },
-                onError: (e: any) => { 
-                  setStatus('error'); 
-                  setErrorDetails(e);
-                  addLog(`Error encountered: ${typeof e === 'object' ? JSON.stringify(e) : String(e)}`);
-                  let causeDetails = "Possible causes: CORS policy blockage, invalid source format, unsupported codec, or origin restriction.";
-                  if (formattedUrl.includes('drive.google.com')) causeDetails += " Google Drive sometimes throttles unauthenticated media proxy requests.";
-                  addLog(causeDetails);
-                }
-              } as any)}
-           />
+           {(url.includes('youtube.com') || url.includes('youtu.be')) ? (
+             <ReactPlayer
+                {...({
+                  url: formattedUrl,
+                  playing: isPlaying,
+                  volume: 0.2,
+                  muted: false,
+                  width: "100%",
+                  height: "100%",
+                  config: { 
+                    youtube: { playerVars: { origin: window.location.origin } }
+                  },
+                  onReady: () => { setStatus('ready'); addLog('Player Ready'); },
+                  onStart: () => { setStatus('started'); addLog('Playback Started'); },
+                  onPlay: () => { setStatus('playing'); addLog('State: Playing'); },
+                  onPause: () => { setStatus('paused'); addLog('State: Paused'); },
+                  onBuffer: () => { setBufferState(true); addLog('Buffering started'); },
+                  onBufferEnd: () => { setBufferState(false); addLog('Buffering ended'); },
+                  onError: (e: any) => { 
+                    setStatus('error'); 
+                    setErrorDetails(e);
+                    addLog(`Error encountered: ${typeof e === 'object' ? JSON.stringify(e) : String(e)}`);
+                  }
+                } as any)}
+             />
+           ) : (
+             <audio
+               src={formattedUrl}
+               muted={false}
+               className="w-full"
+               ref={(el) => {
+                 if (el) {
+                   el.volume = 0.2;
+                   el.onplaying = () => { setStatus('playing'); addLog('State: Playing'); };
+                   el.onpause = () => { setStatus('paused'); addLog('State: Paused'); };
+                   el.onwaiting = () => { setBufferState(true); addLog('Buffering started'); };
+                   el.oncanplay = () => { setStatus('ready'); addLog('Player Ready'); setBufferState(false); };
+                   el.onerror = () => { 
+                      setStatus('error'); 
+                      setErrorDetails('HTML5 Audio playback error'); 
+                      addLog(`Error encountered: Audio format not supported or network error.`);
+                   };
+                   
+                   if (isPlaying) {
+                     const p = el.play();
+                     if (p !== undefined) {
+                       p.then(() => { setStatus('started'); addLog('Playback Started'); }).catch(e => {
+                         setStatus('error');
+                         addLog(`Autoplay blocked or network error: ${e.message}`);
+                       });
+                     }
+                   } else {
+                     el.pause();
+                   }
+                 }
+               }}
+             />
+           )}
          </div>
       )}
     </div>

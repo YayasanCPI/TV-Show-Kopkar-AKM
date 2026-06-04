@@ -83,21 +83,51 @@ export function MusicPlayer() {
           </div>
           <div className="mt-4">
             {bgMusicUrl && (
-              <ReactPlayer
-                url={formatMediaUrl(bgMusicUrl, 'audio')}
-                playing={playing}
-                loop={true}
-                volume={1.0}
-                controls={true} // Tampilkan kontrol selalu
-                width="100%"
-                height={isYoutube ? "250px" : "50px"}
-                style={{ borderRadius: '0.5rem', overflow: 'hidden', pointerEvents: 'auto' }}
-                config={{ 
-                  youtube: { playerVars: { origin: window.location.origin } },
-                  file: { forceAudio: true }
-                }}
-                onError={(e) => console.log('Player Error:', e)}
-              />
+              isYoutube ? (
+                 <div style={{ position: 'relative', width: '100%', height: '250px', borderRadius: '0.5rem', overflow: 'hidden', pointerEvents: 'auto' }}>
+                  <ReactPlayer
+                    {...({
+                      url: bgMusicUrl,
+                      playing: playing,
+                      loop: true,
+                      volume: 1.0,
+                      controls: true,
+                      width: "100%",
+                      height: "100%",
+                      config: { youtube: { playerVars: { origin: window.location.origin } } } as any,
+                      onError: (e: any) => console.log('Player Error:', e)
+                    } as any)}
+                  />
+                  {/* Overlay to block iframe capturing clicks if needed, but controls=true means user should click iframe */}
+                  {!playing && (
+                    <div 
+                      className="absolute inset-0 bg-transparent cursor-pointer" 
+                      onClick={() => setPlaying(true)}
+                    />
+                  )}
+                </div>
+              ) : (
+                <audio
+                  src={formatMediaUrl(bgMusicUrl, 'audio')}
+                  controls={true}
+                  className="w-full"
+                  style={{ borderRadius: '0.5rem' }}
+                  ref={(el) => {
+                    if (el) {
+                      if (playing) {
+                         const playPromise = el.play();
+                         if (playPromise !== undefined) {
+                            playPromise.catch(e => console.log('play error', e));
+                         }
+                      } else {
+                         el.pause();
+                      }
+                    }
+                  }}
+                  onPlay={() => setPlaying(true)}
+                  onPause={() => setPlaying(false)}
+                />
+              )
             )}
           </div>
         </div>
