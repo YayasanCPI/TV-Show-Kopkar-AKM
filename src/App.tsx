@@ -6,6 +6,7 @@ import { Loader2 } from 'lucide-react';
 import Header from './components/Header';
 import Marquee from './components/Marquee';
 import AdminPanel from './components/AdminPanel';
+import { MusicPlayer } from './components/MusicPlayer';
 import SmartNotification from './components/SmartNotification';
 import AbsensiWidget from './components/AbsensiWidget';
 import AdzanAlert from './components/AdzanAlert';
@@ -230,6 +231,7 @@ export default function App() {
  <Routes>
  <Route path="/" element={<DigitalSignage />} />
  <Route path="/admin" element={<AdminPanel />} />
+ <Route path="/music" element={<MusicPlayer />} />
  </Routes>
  </HashRouter>
  </ErrorBoundary>

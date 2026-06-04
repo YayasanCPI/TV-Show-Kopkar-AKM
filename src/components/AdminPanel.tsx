@@ -332,7 +332,27 @@ export default function AdminPanel() {
  💡 <b>Catatan:</b> Kebijakan Auto-play browser mengharuskan interaksi jika ingin memutar musik. Klik salah satu tempat di layar smart TV Anda 1 kali setelah memuat web agar suara bisa hidup (jika tidak kedengaran).
  </p>
  {settings.bgMusicEnabled && settings.bgMusicUrl && (
-   <AudioDiagnostic url={settings.bgMusicUrl} />
+   <div className="mt-4 space-y-4">
+     <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+       <h4 className="font-bold text-blue-800 mb-1">Alternatif Pemutar Latar Belakang</h4>
+       <p className="text-sm text-blue-700 mb-3">
+         Jika Anda tetap kesulitan menyalakan suara di layar TV Box, gunakan solusi 2-Tab. 
+         Buka halaman Signage Radio ini di tab baru, lalu Play.
+       </p>
+       <a 
+         href="#/music" 
+         target="_blank"
+         rel="noopener noreferrer" 
+         className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white hover:bg-blue-700 rounded font-medium transition-colors"
+       >
+         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+           <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
+         </svg>
+         Buka Radio Signage (Tab Baru)
+       </a>
+     </div>
+     <AudioDiagnostic url={settings.bgMusicUrl} />
+   </div>
  )}
  </div>
  </div>
